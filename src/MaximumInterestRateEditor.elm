@@ -99,12 +99,12 @@ publicationDateFromDate value =
     year ++ "T" ++ quarter
 
 
-percentageInput : FieldType -> FieldInfo -> Html Msg
-percentageInput field fieldInfo =
+percentageInput : FieldType -> FieldInfo -> String -> Html Msg
+percentageInput field fieldInfo formName =
     div [ class "input-group" ]
         [ MaskedPercentage.input
             (inputOptions field)
-            [ class "form-control" ]
+            [ class "form-control", name formName ]
             fieldInfo
         , span [ class "input-group-addon" ] [ text "%" ]
         ]
@@ -161,19 +161,27 @@ view model =
                             [ div [ class "form-group" ]
                                 [ label [ for "parution", class "col-sm-2 control-label" ] [ text "Parution" ]
                                 , div [ class "col-sm-10" ]
-                                    [ input [ type_ "text", class "form-control", id "parution", value model.publicationDate, onInput SetPublicationDate ] []
+                                    [ input
+                                        [ type_ "text"
+                                        , class "form-control"
+                                        , id "parution"
+                                        , name "publication_date"
+                                        , value model.publicationDate
+                                        , onInput SetPublicationDate
+                                        ]
+                                        []
                                     ]
                                 ]
                             , div [ class "form-group" ]
                                 [ label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Jusqu'à 3000€" ]
                                 , div [ class "col-sm-2" ]
-                                    [ percentageInput Below3000 model.below3000 ]
+                                    [ percentageInput Below3000 model.below3000 "below_3000" ]
                                 , label [ for "below_3000", class "col-sm-2 control-label" ] [ text "De 3000€ à 6000€" ]
                                 , div [ class "col-sm-2" ]
-                                    [ percentageInput Over3000 model.over3000 ]
+                                    [ percentageInput Over3000 model.over3000 "over_3000" ]
                                 , label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Au-delà 6000€" ]
                                 , div [ class "col-sm-2" ]
-                                    [ percentageInput Over6000 model.over6000 ]
+                                    [ percentageInput Over6000 model.over6000 "over_6000" ]
                                 ]
                             , div []
                                 [ showTableFor 2 model
