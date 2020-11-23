@@ -12,7 +12,7 @@ import Time exposing (Month(..))
 
 
 type alias Model =
-    { publicationDate : String
+    { publicationName : String
     , below3000 : FieldInfo
     , over3000 : FieldInfo
     , over6000 : FieldInfo
@@ -32,7 +32,7 @@ type alias FieldInfo =
 type Msg
     = InputChanged FieldType (Maybe Float)
     | ReceiveDate Date
-    | SetPublicationDate String
+    | SetPublicationName String
 
 
 main : Program () Model Msg
@@ -47,7 +47,7 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { publicationDate = ""
+    ( { publicationName = ""
       , below3000 = Just 20.83
       , over3000 = Just 10.16
       , over6000 = Just 5.19
@@ -60,10 +60,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ReceiveDate today ->
-            ( { model | publicationDate = publicationDateFromDate today }, Cmd.none )
+            ( { model | publicationName = publicationNameFromDate today }, Cmd.none )
 
-        SetPublicationDate value ->
-            ( { model | publicationDate = value }, Cmd.none )
+        SetPublicationName value ->
+            ( { model | publicationName = value }, Cmd.none )
 
         InputChanged Below3000 value ->
             ( { model | below3000 = value }, Cmd.none )
@@ -87,8 +87,8 @@ inputOptions field =
     }
 
 
-publicationDateFromDate : Date -> String
-publicationDateFromDate value =
+publicationNameFromDate : Date -> String
+publicationNameFromDate value =
     let
         year =
             Date.year value |> String.fromInt
@@ -99,15 +99,27 @@ publicationDateFromDate value =
     year ++ "T" ++ quarter
 
 
-percentageInput : FieldType -> FieldInfo -> String -> Html Msg
+percentageInput : FieldType -> FieldInfo -> String -> List (Html Msg)
 percentageInput field fieldInfo formName =
-    div [ class "input-group" ]
+    [ div [ class "input-group" ]
         [ MaskedPercentage.input
             (inputOptions field)
-            [ class "form-control", name formName ]
+            [ class "form-control", id formName ]
             fieldInfo
         , span [ class "input-group-addon" ] [ text "%" ]
         ]
+    , case fieldInfo of
+        Just rate ->
+            input
+                [ type_ "hidden"
+                , formName ++ "_rate" |> name
+                , rate * 100 |> Round.round 0 |> value
+                ]
+                []
+
+        Nothing ->
+            text ""
+    ]
 
 
 showInterest : Int -> Maybe Float -> String
@@ -158,23 +170,20 @@ view model =
                     [ type_ "text"
                     , class "form-control"
                     , id "parution"
-                    , name "publication_date"
-                    , value model.publicationDate
-                    , onInput SetPublicationDate
+                    , name "publication_name"
+                    , value model.publicationName
+                    , onInput SetPublicationName
                     ]
                     []
                 ]
             ]
         , div [ class "form-group" ]
             [ label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Jusqu'à 3000€" ]
-            , div [ class "col-sm-2" ]
-                [ percentageInput Below3000 model.below3000 "below_3000" ]
-            , label [ for "below_3000", class "col-sm-2 control-label" ] [ text "De 3000€ à 6000€" ]
-            , div [ class "col-sm-2" ]
-                [ percentageInput Over3000 model.over3000 "over_3000" ]
-            , label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Au-delà 6000€" ]
-            , div [ class "col-sm-2" ]
-                [ percentageInput Over6000 model.over6000 "over_6000" ]
+            , percentageInput Below3000 model.below3000 "below_3000" |> div [ class "col-sm-2" ]
+            , label [ for "over_3000", class "col-sm-2 control-label" ] [ text "De 3000€ à 6000€" ]
+            , percentageInput Over3000 model.over3000 "over_3000" |> div [ class "col-sm-2" ]
+            , label [ for "over_6000", class "col-sm-2 control-label" ] [ text "Au-delà 6000€" ]
+            , percentageInput Over6000 model.over6000 "over_6000" |> div [ class "col-sm-2" ]
             ]
         , div []
             [ showTableFor 2 model
