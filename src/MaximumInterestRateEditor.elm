@@ -164,12 +164,12 @@ view : Model -> Html Msg
 view model =
     div []
         [ div [ class "form-group" ]
-            [ label [ for "parution", class "col-sm-2 control-label" ] [ text "Parution" ]
+            [ label [ for "publication_name", class "col-sm-2 control-label" ] [ text "Parution" ]
             , div [ class "col-sm-10" ]
                 [ input
                     [ type_ "text"
                     , class "form-control"
-                    , id "parution"
+                    , id "publication_name"
                     , name "publication_name"
                     , value model.publicationName
                     , onInput SetPublicationName
