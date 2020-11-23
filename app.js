@@ -6332,7 +6332,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-10')
+					$elm$html$Html$Attributes$class('col-sm-12')
 				]),
 			_List_fromArray(
 				[
@@ -6340,7 +6340,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-2')
+							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-2')
 						]),
 					_List_fromArray(
 						[
@@ -6356,7 +6356,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-1 text-center')
+							$elm$html$Html$Attributes$class('col-sm-1 text-right')
 						]),
 					_List_fromArray(
 						[
@@ -6367,7 +6367,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-offset-2 col-sm-1')
+							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-2')
 						]),
 					_List_fromArray(
 						[
@@ -6383,7 +6383,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-2 text-center')
+							$elm$html$Html$Attributes$class('col-sm-1 text-right')
 						]),
 					_List_fromArray(
 						[
@@ -6394,7 +6394,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-offset-2 col-sm-1')
+							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-2')
 						]),
 					_List_fromArray(
 						[
@@ -6410,7 +6410,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-1 text-center')
+							$elm$html$Html$Attributes$class('col-sm-1 text-right')
 						]),
 					_List_fromArray(
 						[
@@ -6441,7 +6441,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$for('parution'),
-								$elm$html$Html$Attributes$class('col-sm-1 control-label')
+								$elm$html$Html$Attributes$class('col-sm-2 control-label')
 							]),
 						_List_fromArray(
 							[
@@ -6451,7 +6451,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('col-sm-11')
+								$elm$html$Html$Attributes$class('col-sm-10')
 							]),
 						_List_fromArray(
 							[
@@ -6482,7 +6482,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$for('below_3000'),
-								$elm$html$Html$Attributes$class('col-sm-1 control-label')
+								$elm$html$Html$Attributes$class('col-sm-2 control-label')
 							]),
 						_List_fromArray(
 							[
@@ -6492,7 +6492,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('col-sm-3')
+								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
 						_List_fromArray(
 							[
@@ -6503,7 +6503,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$for('below_3000'),
-								$elm$html$Html$Attributes$class('col-sm-1 control-label')
+								$elm$html$Html$Attributes$class('col-sm-2 control-label')
 							]),
 						_List_fromArray(
 							[
@@ -6513,7 +6513,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('col-sm-3')
+								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
 						_List_fromArray(
 							[
@@ -6524,7 +6524,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$for('below_3000'),
-								$elm$html$Html$Attributes$class('col-sm-1 control-label')
+								$elm$html$Html$Attributes$class('col-sm-2 control-label')
 							]),
 						_List_fromArray(
 							[
@@ -6534,7 +6534,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('col-sm-3')
+								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
 						_List_fromArray(
 							[
