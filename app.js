@@ -5631,16 +5631,38 @@ var $author$project$MaximumInterestRateEditor$inputOptions = function (field) {
 			s: $elm$core$Maybe$Just(0)
 		});
 };
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$MaximumInterestRateEditor$percentageInput = F2(
 	function (field, fieldInfo) {
-		return A3(
-			$author$project$Input$Float$input,
-			$author$project$MaximumInterestRateEditor$inputOptions(field),
+		return A2(
+			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('form-control')
+					$elm$html$Html$Attributes$class('input-group')
 				]),
-			fieldInfo);
+			_List_fromArray(
+				[
+					A3(
+					$author$project$Input$Float$input,
+					$author$project$MaximumInterestRateEditor$inputOptions(field),
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('form-control')
+						]),
+					fieldInfo),
+					A2(
+					$elm$html$Html$span,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('input-group-addon')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('%')
+						]))
+				]));
 	});
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$core$Basics$negate = function (n) {
@@ -5882,8 +5904,6 @@ var $author$project$MaximumInterestRateEditor$showInterest = F2(
 		}
 	});
 var $elm$html$Html$strong = _VirtualDom_node('strong');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 	function (x, model) {
 		var months = $elm$core$String$fromInt(x);
