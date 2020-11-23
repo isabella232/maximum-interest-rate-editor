@@ -5668,7 +5668,6 @@ var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$form = _VirtualDom_node('form');
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
@@ -6328,12 +6327,12 @@ var $elm$html$Html$strong = _VirtualDom_node('strong');
 var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 	function (x, model) {
 		var months = $elm$core$String$fromInt(x);
-		var title = 'P' + (months + 'X');
+		var title = 'Payement en ' + (months + ' fois');
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('col-sm-offset-2 col-sm-10')
+					$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-10')
 				]),
 			_List_fromArray(
 				[
@@ -6341,7 +6340,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-1 text-center')
+							$elm$html$Html$Attributes$class('col-sm-2')
 						]),
 					_List_fromArray(
 						[
@@ -6368,7 +6367,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-offset-3 col-sm-1 text-center')
+							$elm$html$Html$Attributes$class('col-sm-offset-2 col-sm-1')
 						]),
 					_List_fromArray(
 						[
@@ -6384,7 +6383,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-1 text-center')
+							$elm$html$Html$Attributes$class('col-sm-2 text-center')
 						]),
 					_List_fromArray(
 						[
@@ -6395,7 +6394,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-offset-3 col-sm-1 text-center')
+							$elm$html$Html$Attributes$class('col-sm-offset-2 col-sm-1')
 						]),
 					_List_fromArray(
 						[
@@ -6422,196 +6421,135 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 	});
 var $author$project$MaximumInterestRateEditor$view = function (model) {
 	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
+		$elm$html$Html$form,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('form-horizontal')
+			]),
 		_List_fromArray(
 			[
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('row')
+						$elm$html$Html$Attributes$class('form-group')
 					]),
 				_List_fromArray(
 					[
 						A2(
+						$elm$html$Html$label,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$for('parution'),
+								$elm$html$Html$Attributes$class('col-sm-1 control-label')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Parution')
+							])),
+						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('col-xs-6')
+								$elm$html$Html$Attributes$class('col-sm-11')
 							]),
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$div,
+								$elm$html$Html$input,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('panel panel-default')
+										$elm$html$Html$Attributes$type_('text'),
+										$elm$html$Html$Attributes$class('form-control'),
+										$elm$html$Html$Attributes$id('parution'),
+										$elm$html$Html$Attributes$name('publication_date'),
+										$elm$html$Html$Attributes$value(model.M),
+										$elm$html$Html$Events$onInput($author$project$MaximumInterestRateEditor$SetPublicationDate)
 									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('panel-heading')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$h3,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('panel-title')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Configuration du taux d\'usure')
-													]))
-											])),
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('panel-body')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$form,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('form-horizontal')
-													]),
-												_List_fromArray(
-													[
-														A2(
-														$elm$html$Html$div,
-														_List_fromArray(
-															[
-																$elm$html$Html$Attributes$class('form-group')
-															]),
-														_List_fromArray(
-															[
-																A2(
-																$elm$html$Html$label,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$for('parution'),
-																		$elm$html$Html$Attributes$class('col-sm-2 control-label')
-																	]),
-																_List_fromArray(
-																	[
-																		$elm$html$Html$text('Parution')
-																	])),
-																A2(
-																$elm$html$Html$div,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$class('col-sm-10')
-																	]),
-																_List_fromArray(
-																	[
-																		A2(
-																		$elm$html$Html$input,
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$Attributes$type_('text'),
-																				$elm$html$Html$Attributes$class('form-control'),
-																				$elm$html$Html$Attributes$id('parution'),
-																				$elm$html$Html$Attributes$name('publication_date'),
-																				$elm$html$Html$Attributes$value(model.M),
-																				$elm$html$Html$Events$onInput($author$project$MaximumInterestRateEditor$SetPublicationDate)
-																			]),
-																		_List_Nil)
-																	]))
-															])),
-														A2(
-														$elm$html$Html$div,
-														_List_fromArray(
-															[
-																$elm$html$Html$Attributes$class('form-group')
-															]),
-														_List_fromArray(
-															[
-																A2(
-																$elm$html$Html$label,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$for('below_3000'),
-																		$elm$html$Html$Attributes$class('col-sm-2 control-label')
-																	]),
-																_List_fromArray(
-																	[
-																		$elm$html$Html$text('Jusqu\'à 3000€')
-																	])),
-																A2(
-																$elm$html$Html$div,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$class('col-sm-2')
-																	]),
-																_List_fromArray(
-																	[
-																		A3($author$project$MaximumInterestRateEditor$percentageInput, 0, model.I, 'below_3000')
-																	])),
-																A2(
-																$elm$html$Html$label,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$for('below_3000'),
-																		$elm$html$Html$Attributes$class('col-sm-2 control-label')
-																	]),
-																_List_fromArray(
-																	[
-																		$elm$html$Html$text('De 3000€ à 6000€')
-																	])),
-																A2(
-																$elm$html$Html$div,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$class('col-sm-2')
-																	]),
-																_List_fromArray(
-																	[
-																		A3($author$project$MaximumInterestRateEditor$percentageInput, 1, model.K, 'over_3000')
-																	])),
-																A2(
-																$elm$html$Html$label,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$for('below_3000'),
-																		$elm$html$Html$Attributes$class('col-sm-2 control-label')
-																	]),
-																_List_fromArray(
-																	[
-																		$elm$html$Html$text('Au-delà 6000€')
-																	])),
-																A2(
-																$elm$html$Html$div,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$class('col-sm-2')
-																	]),
-																_List_fromArray(
-																	[
-																		A3($author$project$MaximumInterestRateEditor$percentageInput, 2, model.L, 'over_6000')
-																	]))
-															])),
-														A2(
-														$elm$html$Html$div,
-														_List_Nil,
-														_List_fromArray(
-															[
-																A2($author$project$MaximumInterestRateEditor$showTableFor, 2, model),
-																A2($author$project$MaximumInterestRateEditor$showTableFor, 3, model),
-																A2($author$project$MaximumInterestRateEditor$showTableFor, 4, model),
-																A2($author$project$MaximumInterestRateEditor$showTableFor, 10, model)
-															]))
-													]))
-											]))
-									]))
+								_List_Nil)
 							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('form-group')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$label,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$for('below_3000'),
+								$elm$html$Html$Attributes$class('col-sm-1 control-label')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Jusqu\'à 3000€')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('col-sm-3')
+							]),
+						_List_fromArray(
+							[
+								A3($author$project$MaximumInterestRateEditor$percentageInput, 0, model.I, 'below_3000')
+							])),
+						A2(
+						$elm$html$Html$label,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$for('below_3000'),
+								$elm$html$Html$Attributes$class('col-sm-1 control-label')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('De 3000€ à 6000€')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('col-sm-3')
+							]),
+						_List_fromArray(
+							[
+								A3($author$project$MaximumInterestRateEditor$percentageInput, 1, model.K, 'over_3000')
+							])),
+						A2(
+						$elm$html$Html$label,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$for('below_3000'),
+								$elm$html$Html$Attributes$class('col-sm-1 control-label')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Au-delà 6000€')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('col-sm-3')
+							]),
+						_List_fromArray(
+							[
+								A3($author$project$MaximumInterestRateEditor$percentageInput, 2, model.L, 'over_6000')
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2($author$project$MaximumInterestRateEditor$showTableFor, 2, model),
+						A2($author$project$MaximumInterestRateEditor$showTableFor, 3, model),
+						A2($author$project$MaximumInterestRateEditor$showTableFor, 4, model),
+						A2($author$project$MaximumInterestRateEditor$showTableFor, 10, model)
 					]))
 			]));
 };
