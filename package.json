@@ -1,14 +1,14 @@
 {
-  "name": "alma-wear-rate-editor",
+  "name": "alma-maximum-interest-rate-editor",
   "version": "1.0.0",
-  "description": "Alma Wear Rate Editor",
+  "description": "Alma Maximum Interest Rate Editor",
   "scripts": {
-    "build": "npm run cleanup && npm run copy-assets && elm make src/WearRateEditor.elm --output=build/app.js --optimize",
+    "build": "npm run cleanup && npm run copy-assets && elm make src/MaximumInterestRateEditor.elm --output=build/app.js --optimize",
     "copy-assets": "rimraf build && mkdir build && cp -r public/* build",
     "cleanup": "rimraf elm-stuff/",
-    "debug": "elm-live src/WearRateEditor.elm --port=3000 --dir=public/ -- --output=public/app.js --debug",
+    "debug": "elm-live src/MaximumInterestRateEditor.elm --port=3000 --dir=public/ -- --output=public/app.js --debug",
     "deploy": "npm run build && gh-pages --dist build/",
-    "live": "elm-live src/WearRateEditor.elm --port=3000 --dir=public/ -- --output=public/app.js",
+    "live": "elm-live src/MaximumInterestRateEditor.elm --port=3000 --dir=public/ -- --output=public/app.js",
     "test": "elm-test"
   },
   "repository": {
