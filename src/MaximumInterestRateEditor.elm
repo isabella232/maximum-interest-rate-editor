@@ -136,62 +136,50 @@ showTableFor x model =
             String.fromInt x
 
         title =
-            "P" ++ months ++ "X"
+            "Payement en " ++ months ++ " fois"
     in
-    div [ class "col-sm-offset-2 col-sm-10" ]
-        [ p [ class "col-sm-1 text-center" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-center" ] [ text <| showInterest x model.below3000 ]
-        , p [ class "col-sm-offset-3 col-sm-1 text-center" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-center" ] [ text <| showInterest x model.over3000 ]
-        , p [ class "col-sm-offset-3 col-sm-1 text-center" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-center" ] [ text <| showInterest x model.over6000 ]
+    div [ class "col-sm-12" ]
+        [ p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
+        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.below3000 ]
+        , p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
+        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.over3000 ]
+        , p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
+        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.over6000 ]
         ]
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ div [ class "row" ]
-            [ div [ class "col-xs-6" ]
-                [ div [ class "panel panel-default" ]
-                    [ div [ class "panel-heading" ]
-                        [ h3 [ class "panel-title" ] [ text "Configuration du taux d'usure" ] ]
-                    , div [ class "panel-body" ]
-                        [ Html.form [ class "form-horizontal" ]
-                            [ div [ class "form-group" ]
-                                [ label [ for "parution", class "col-sm-2 control-label" ] [ text "Parution" ]
-                                , div [ class "col-sm-10" ]
-                                    [ input
-                                        [ type_ "text"
-                                        , class "form-control"
-                                        , id "parution"
-                                        , name "publication_date"
-                                        , value model.publicationDate
-                                        , onInput SetPublicationDate
-                                        ]
-                                        []
-                                    ]
-                                ]
-                            , div [ class "form-group" ]
-                                [ label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Jusqu'à 3000€" ]
-                                , div [ class "col-sm-2" ]
-                                    [ percentageInput Below3000 model.below3000 "below_3000" ]
-                                , label [ for "below_3000", class "col-sm-2 control-label" ] [ text "De 3000€ à 6000€" ]
-                                , div [ class "col-sm-2" ]
-                                    [ percentageInput Over3000 model.over3000 "over_3000" ]
-                                , label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Au-delà 6000€" ]
-                                , div [ class "col-sm-2" ]
-                                    [ percentageInput Over6000 model.over6000 "over_6000" ]
-                                ]
-                            , div []
-                                [ showTableFor 2 model
-                                , showTableFor 3 model
-                                , showTableFor 4 model
-                                , showTableFor 10 model
-                                ]
-                            ]
-                        ]
+        [ div [ class "form-group" ]
+            [ label [ for "parution", class "col-sm-2 control-label" ] [ text "Parution" ]
+            , div [ class "col-sm-10" ]
+                [ input
+                    [ type_ "text"
+                    , class "form-control"
+                    , id "parution"
+                    , name "publication_date"
+                    , value model.publicationDate
+                    , onInput SetPublicationDate
                     ]
+                    []
                 ]
+            ]
+        , div [ class "form-group" ]
+            [ label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Jusqu'à 3000€" ]
+            , div [ class "col-sm-2" ]
+                [ percentageInput Below3000 model.below3000 "below_3000" ]
+            , label [ for "below_3000", class "col-sm-2 control-label" ] [ text "De 3000€ à 6000€" ]
+            , div [ class "col-sm-2" ]
+                [ percentageInput Over3000 model.over3000 "over_3000" ]
+            , label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Au-delà 6000€" ]
+            , div [ class "col-sm-2" ]
+                [ percentageInput Over6000 model.over6000 "over_6000" ]
+            ]
+        , div []
+            [ showTableFor 2 model
+            , showTableFor 3 model
+            , showTableFor 4 model
+            , showTableFor 10 model
             ]
         ]
