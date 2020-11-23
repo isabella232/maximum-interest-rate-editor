@@ -130,15 +130,11 @@ showInterest n maybe_rate =
 
         Just rate ->
             let
-                base_rate =
-                    (((1 + rate / 100) ^ (1 / 12) - 1) / (1 - (1 + rate / 100) ^ -1) * 12) - 1
-
                 rounded_value =
-                    (base_rate * (toFloat n - 1) / 12 * 100)
-                        |> Round.round 2
-                        |> String.replace "." ","
+                    (((1 + rate / 100) ^ ((toFloat n - 1) / 12) - 1) * 10000 * (toFloat n - 1) / toFloat n)
+                        |> Round.round 0
             in
-            rounded_value ++ " %"
+            rounded_value ++ " bps"
 
 
 showTableFor : Int -> Model -> Html Msg
