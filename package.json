@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Alma Maximum Interest Rate Editor",
   "scripts": {
+    "analyse": "elm-analyse",
     "build": "npm run cleanup && npm run copy-assets && elm make src/MaximumInterestRateEditor.elm --output=build/app.js --optimize",
     "copy-assets": "rimraf build && mkdir build && cp -r public/* build",
     "cleanup": "rimraf elm-stuff/",
