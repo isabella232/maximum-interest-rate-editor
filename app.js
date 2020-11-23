@@ -5595,7 +5595,7 @@ var $justinmimbs$date$Date$monthToQuarter = function (m) {
 	return (($justinmimbs$date$Date$monthToNumber(m) + 2) / 3) | 0;
 };
 var $justinmimbs$date$Date$quarter = A2($elm$core$Basics$composeR, $justinmimbs$date$Date$month, $justinmimbs$date$Date$monthToQuarter);
-var $author$project$MaximumInterestRateEditor$publicationDateFromDate = function (value) {
+var $author$project$MaximumInterestRateEditor$publicationNameFromDate = function (value) {
 	var year = $elm$core$String$fromInt(
 		$justinmimbs$date$Date$year(value));
 	var quarter = $elm$core$String$fromInt(
@@ -5611,7 +5611,7 @@ var $author$project$MaximumInterestRateEditor$update = F2(
 					_Utils_update(
 						model,
 						{
-							M: $author$project$MaximumInterestRateEditor$publicationDateFromDate(today)
+							M: $author$project$MaximumInterestRateEditor$publicationNameFromDate(today)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 2:
@@ -5653,7 +5653,7 @@ var $author$project$MaximumInterestRateEditor$update = F2(
 var $author$project$MaximumInterestRateEditor$Below3000 = 0;
 var $author$project$MaximumInterestRateEditor$Over3000 = 1;
 var $author$project$MaximumInterestRateEditor$Over6000 = 2;
-var $author$project$MaximumInterestRateEditor$SetPublicationDate = function (a) {
+var $author$project$MaximumInterestRateEditor$SetPublicationName = function (a) {
 	return {$: 2, a: a};
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -6053,42 +6053,6 @@ var $author$project$MaximumInterestRateEditor$inputOptions = function (field) {
 			w: $elm$core$Maybe$Just(0)
 		});
 };
-var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$MaximumInterestRateEditor$percentageInput = F3(
-	function (field, fieldInfo, formName) {
-		return A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('input-group')
-				]),
-			_List_fromArray(
-				[
-					A3(
-					$author$project$Input$Float$input,
-					$author$project$MaximumInterestRateEditor$inputOptions(field),
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('form-control'),
-							$elm$html$Html$Attributes$name(formName)
-						]),
-					fieldInfo),
-					A2(
-					$elm$html$Html$span,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('input-group-addon')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('%')
-						]))
-				]));
-	});
-var $elm$html$Html$p = _VirtualDom_node('p');
-var $elm$core$Basics$pow = _Basics_pow;
 var $elm$core$Basics$abs = function (n) {
 	return (n < 0) ? (-n) : n;
 };
@@ -6307,6 +6271,62 @@ var $myrho$elm_round$Round$round = $myrho$elm_round$Round$roundFun(
 				}
 			}
 		}));
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$MaximumInterestRateEditor$percentageInput = F3(
+	function (field, fieldInfo, formName) {
+		return _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('input-group')
+					]),
+				_List_fromArray(
+					[
+						A3(
+						$author$project$Input$Float$input,
+						$author$project$MaximumInterestRateEditor$inputOptions(field),
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('form-control'),
+								$elm$html$Html$Attributes$id(formName)
+							]),
+						fieldInfo),
+						A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('input-group-addon')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('%')
+							]))
+					])),
+				function () {
+				if (!fieldInfo.$) {
+					var rate = fieldInfo.a;
+					return A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('hidden'),
+								$elm$html$Html$Attributes$name(formName + '_rate'),
+								$elm$html$Html$Attributes$value(
+								A2($myrho$elm_round$Round$round, 0, rate * 100))
+							]),
+						_List_Nil);
+				} else {
+					return $elm$html$Html$text('');
+				}
+			}()
+			]);
+	});
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$core$Basics$pow = _Basics_pow;
 var $author$project$MaximumInterestRateEditor$showInterest = F2(
 	function (n, maybe_rate) {
 		if (maybe_rate.$ === 1) {
@@ -6458,9 +6478,9 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 										$elm$html$Html$Attributes$type_('text'),
 										$elm$html$Html$Attributes$class('form-control'),
 										$elm$html$Html$Attributes$id('parution'),
-										$elm$html$Html$Attributes$name('publication_date'),
+										$elm$html$Html$Attributes$name('publication_name'),
 										$elm$html$Html$Attributes$value(model.M),
-										$elm$html$Html$Events$onInput($author$project$MaximumInterestRateEditor$SetPublicationDate)
+										$elm$html$Html$Events$onInput($author$project$MaximumInterestRateEditor$SetPublicationName)
 									]),
 								_List_Nil)
 							]))
@@ -6490,15 +6510,12 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 							[
 								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
-						_List_fromArray(
-							[
-								A3($author$project$MaximumInterestRateEditor$percentageInput, 0, model.I, 'below_3000')
-							])),
+						A3($author$project$MaximumInterestRateEditor$percentageInput, 0, model.I, 'below_3000')),
 						A2(
 						$elm$html$Html$label,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$for('below_3000'),
+								$elm$html$Html$Attributes$for('over_3000'),
 								$elm$html$Html$Attributes$class('col-sm-2 control-label')
 							]),
 						_List_fromArray(
@@ -6511,15 +6528,12 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 							[
 								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
-						_List_fromArray(
-							[
-								A3($author$project$MaximumInterestRateEditor$percentageInput, 1, model.K, 'over_3000')
-							])),
+						A3($author$project$MaximumInterestRateEditor$percentageInput, 1, model.K, 'over_3000')),
 						A2(
 						$elm$html$Html$label,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$for('below_3000'),
+								$elm$html$Html$Attributes$for('over_6000'),
 								$elm$html$Html$Attributes$class('col-sm-2 control-label')
 							]),
 						_List_fromArray(
@@ -6532,10 +6546,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 							[
 								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
-						_List_fromArray(
-							[
-								A3($author$project$MaximumInterestRateEditor$percentageInput, 2, model.L, 'over_6000')
-							]))
+						A3($author$project$MaximumInterestRateEditor$percentageInput, 2, model.L, 'over_6000'))
 					])),
 				A2(
 				$elm$html$Html$div,
