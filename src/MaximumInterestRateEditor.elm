@@ -175,9 +175,8 @@ view model =
                                 , div [ class "col-sm-2" ]
                                     [ percentageInput Over6000 model.over6000 ]
                                 ]
-                            , div [ class "form-group" ]
-                                [ label [ for "payments", class "col-sm-3 control-label" ] [ text "Tableaux d'amortissement" ]
-                                , showTableFor 2 model
+                            , div []
+                                [ showTableFor 2 model
                                 , showTableFor 3 model
                                 , showTableFor 4 model
                                 , showTableFor 10 model
