@@ -72,10 +72,13 @@ inputOptions field =
 
 percentageInput : FieldType -> FieldInfo -> Html Msg
 percentageInput field fieldInfo =
-    MaskedPercentage.input
-        (inputOptions field)
-        [ class "form-control" ]
-        fieldInfo
+    div [ class "input-group" ]
+        [ MaskedPercentage.input
+            (inputOptions field)
+            [ class "form-control" ]
+            fieldInfo
+        , span [ class "input-group-addon" ] [ text "%" ]
+        ]
 
 
 showInterest : Int -> Maybe Float -> String
