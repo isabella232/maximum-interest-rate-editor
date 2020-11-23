@@ -5672,6 +5672,7 @@ var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -6057,8 +6058,8 @@ var $author$project$MaximumInterestRateEditor$inputOptions = function (field) {
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$MaximumInterestRateEditor$percentageInput = F2(
-	function (field, fieldInfo) {
+var $author$project$MaximumInterestRateEditor$percentageInput = F3(
+	function (field, fieldInfo, formName) {
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -6072,7 +6073,8 @@ var $author$project$MaximumInterestRateEditor$percentageInput = F2(
 					$author$project$MaximumInterestRateEditor$inputOptions(field),
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('form-control')
+							$elm$html$Html$Attributes$class('form-control'),
+							$elm$html$Html$Attributes$name(formName)
 						]),
 					fieldInfo),
 					A2(
@@ -6517,6 +6519,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 																				$elm$html$Html$Attributes$type_('text'),
 																				$elm$html$Html$Attributes$class('form-control'),
 																				$elm$html$Html$Attributes$id('parution'),
+																				$elm$html$Html$Attributes$name('publication_date'),
 																				$elm$html$Html$Attributes$value(model.M),
 																				$elm$html$Html$Events$onInput($author$project$MaximumInterestRateEditor$SetPublicationDate)
 																			]),
@@ -6550,7 +6553,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 																	]),
 																_List_fromArray(
 																	[
-																		A2($author$project$MaximumInterestRateEditor$percentageInput, 0, model.I)
+																		A3($author$project$MaximumInterestRateEditor$percentageInput, 0, model.I, 'below_3000')
 																	])),
 																A2(
 																$elm$html$Html$label,
@@ -6571,7 +6574,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 																	]),
 																_List_fromArray(
 																	[
-																		A2($author$project$MaximumInterestRateEditor$percentageInput, 1, model.K)
+																		A3($author$project$MaximumInterestRateEditor$percentageInput, 1, model.K, 'over_3000')
 																	])),
 																A2(
 																$elm$html$Html$label,
@@ -6592,7 +6595,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 																	]),
 																_List_fromArray(
 																	[
-																		A2($author$project$MaximumInterestRateEditor$percentageInput, 2, model.L)
+																		A3($author$project$MaximumInterestRateEditor$percentageInput, 2, model.L, 'over_6000')
 																	]))
 															])),
 														A2(
