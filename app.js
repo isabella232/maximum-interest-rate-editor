@@ -6456,7 +6456,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 						$elm$html$Html$label,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$for('parution'),
+								$elm$html$Html$Attributes$for('publication_name'),
 								$elm$html$Html$Attributes$class('col-sm-2 control-label')
 							]),
 						_List_fromArray(
@@ -6477,7 +6477,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 									[
 										$elm$html$Html$Attributes$type_('text'),
 										$elm$html$Html$Attributes$class('form-control'),
-										$elm$html$Html$Attributes$id('parution'),
+										$elm$html$Html$Attributes$id('publication_name'),
 										$elm$html$Html$Attributes$name('publication_name'),
 										$elm$html$Html$Attributes$value(model.M),
 										$elm$html$Html$Events$onInput($author$project$MaximumInterestRateEditor$SetPublicationName)
