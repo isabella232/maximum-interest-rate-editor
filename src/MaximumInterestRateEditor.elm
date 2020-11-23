@@ -1,14 +1,19 @@
 module MaximumInterestRateEditor exposing (main)
 
 import Browser
+import Date exposing (Date)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Input.Float as MaskedPercentage
 import Round
+import Task
+import Time exposing (Month(..))
 
 
 type alias Model =
-    { below3000 : FieldInfo
+    { publicationDate : String
+    , below3000 : FieldInfo
     , over3000 : FieldInfo
     , over6000 : FieldInfo
     }
@@ -26,36 +31,48 @@ type alias FieldInfo =
 
 type Msg
     = InputChanged FieldType (Maybe Float)
+    | ReceiveDate Date
+    | SetPublicationDate String
 
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
+    Browser.element
         { init = init
         , update = update
         , view = view
+        , subscriptions = always Sub.none
         }
 
 
-init : Model
-init =
-    { below3000 = Just 20.83
-    , over3000 = Just 10.16
-    , over6000 = Just 5.19
-    }
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( { publicationDate = ""
+      , below3000 = Just 20.83
+      , over3000 = Just 10.16
+      , over6000 = Just 5.19
+      }
+    , Date.today |> Task.perform ReceiveDate
+    )
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        ReceiveDate today ->
+            ( { model | publicationDate = publicationDateFromDate today }, Cmd.none )
+
+        SetPublicationDate value ->
+            ( { model | publicationDate = value }, Cmd.none )
+
         InputChanged Below3000 value ->
-            { model | below3000 = value }
+            ( { model | below3000 = value }, Cmd.none )
 
         InputChanged Over3000 value ->
-            { model | over3000 = value }
+            ( { model | over3000 = value }, Cmd.none )
 
         InputChanged Over6000 value ->
-            { model | over6000 = value }
+            ( { model | over6000 = value }, Cmd.none )
 
 
 inputOptions : FieldType -> MaskedPercentage.Options Msg
@@ -68,6 +85,18 @@ inputOptions field =
         | maxValue = Just 100
         , minValue = Just 0
     }
+
+
+publicationDateFromDate : Date -> String
+publicationDateFromDate value =
+    let
+        year =
+            Date.year value |> String.fromInt
+
+        quarter =
+            Date.quarter value |> String.fromInt
+    in
+    year ++ "T" ++ quarter
 
 
 percentageInput : FieldType -> FieldInfo -> Html Msg
@@ -132,7 +161,7 @@ view model =
                             [ div [ class "form-group" ]
                                 [ label [ for "parution", class "col-sm-2 control-label" ] [ text "Parution" ]
                                 , div [ class "col-sm-10" ]
-                                    [ input [ type_ "text", class "form-control", id "parution", value "2020T4" ] []
+                                    [ input [ type_ "text", class "form-control", id "parution", value model.publicationDate, onInput SetPublicationDate ] []
                                     ]
                                 ]
                             , div [ class "form-group" ]
