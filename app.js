@@ -6597,23 +6597,9 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 															])),
 														A2(
 														$elm$html$Html$div,
+														_List_Nil,
 														_List_fromArray(
 															[
-																$elm$html$Html$Attributes$class('form-group')
-															]),
-														_List_fromArray(
-															[
-																A2(
-																$elm$html$Html$label,
-																_List_fromArray(
-																	[
-																		$elm$html$Html$Attributes$for('payments'),
-																		$elm$html$Html$Attributes$class('col-sm-3 control-label')
-																	]),
-																_List_fromArray(
-																	[
-																		$elm$html$Html$text('Tableaux d\'amortissement')
-																	])),
 																A2($author$project$MaximumInterestRateEditor$showTableFor, 2, model),
 																A2($author$project$MaximumInterestRateEditor$showTableFor, 3, model),
 																A2($author$project$MaximumInterestRateEditor$showTableFor, 4, model),
