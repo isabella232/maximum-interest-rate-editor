@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.P.G === region.U.G)
+	if (region.P.E === region.U.E)
 	{
-		return 'on line ' + region.P.G;
+		return 'on line ' + region.P.E;
 	}
-	return 'on lines ' + region.P.G + ' through ' + region.U.G;
+	return 'on lines ' + region.P.E + ' through ' + region.U.E;
 }
 
 
@@ -2704,7 +2704,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		s: func(record.s),
+		r: func(record.r),
 		Q: record.Q,
 		N: record.N
 	}
@@ -2974,7 +2974,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.s;
+		var message = !tag ? value : tag < 3 ? value.a : value.r;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -4396,9 +4396,9 @@ var $elm$core$Maybe$Just = function (a) {
 	return {$: 0, a: a};
 };
 var $author$project$MaximumInterestRateEditor$init = {
-	z: $elm$core$Maybe$Just(20.83),
-	B: $elm$core$Maybe$Just(10.16),
-	C: $elm$core$Maybe$Just(5.19)
+	D: $elm$core$Maybe$Just(20.83),
+	F: $elm$core$Maybe$Just(10.16),
+	G: $elm$core$Maybe$Just(5.19)
 };
 var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$GT = 2;
@@ -5203,32 +5203,25 @@ var $elm$browser$Browser$sandbox = function (impl) {
 };
 var $author$project$MaximumInterestRateEditor$update = F2(
 	function (msg, model) {
-		if (!msg.$) {
-			return model;
-		} else {
-			switch (msg.a) {
-				case 0:
-					var _v1 = msg.a;
-					var value = msg.b;
-					var fieldInfo = model.z;
-					return _Utils_update(
-						model,
-						{z: value});
-				case 1:
-					var _v2 = msg.a;
-					var value = msg.b;
-					var fieldInfo = model.B;
-					return _Utils_update(
-						model,
-						{B: value});
-				default:
-					var _v3 = msg.a;
-					var value = msg.b;
-					var fieldInfo = model.C;
-					return _Utils_update(
-						model,
-						{C: value});
-			}
+		switch (msg.a) {
+			case 0:
+				var _v1 = msg.a;
+				var value = msg.b;
+				return _Utils_update(
+					model,
+					{D: value});
+			case 1:
+				var _v2 = msg.a;
+				var value = msg.b;
+				return _Utils_update(
+					model,
+					{F: value});
+			default:
+				var _v3 = msg.a;
+				var value = msg.b;
+				return _Utils_update(
+					model,
+					{G: value});
 		}
 	});
 var $author$project$MaximumInterestRateEditor$Below3000 = 0;
@@ -5359,10 +5352,10 @@ var $elm$html$Html$Events$targetValue = A2(
 var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$Input$Float$onChange = function (options) {
 	var checkWithMinValue = function (number) {
-		return A2($author$project$Input$Float$lessThanMinValue, options.l, number) ? options.l : number;
+		return A2($author$project$Input$Float$lessThanMinValue, options.s, number) ? options.s : number;
 	};
 	var checkWithMaxValue = function (number) {
-		return A2($author$project$Input$Float$exceedMaxValue, options.k, number) ? options.k : number;
+		return A2($author$project$Input$Float$exceedMaxValue, options.m, number) ? options.m : number;
 	};
 	var toFloat = function (string) {
 		return checkWithMaxValue(
@@ -5464,7 +5457,7 @@ var $elm$core$Basics$not = _Basics_not;
 var $author$project$Input$Float$isValid = F2(
 	function (newValue, options) {
 		var updatedNumber = $elm$core$String$toFloat(newValue);
-		return !A2($author$project$Input$Float$exceedMaxValue, options.k, updatedNumber);
+		return !A2($author$project$Input$Float$exceedMaxValue, options.m, updatedNumber);
 	});
 var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
 	return {$: 2, a: a};
@@ -5529,7 +5522,8 @@ var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('
 var $author$project$Input$Float$input = F3(
 	function (options, attributes, currentValue) {
 		var toArray = function (a) {
-			return A2($elm$core$List$cons, a, _List_Nil);
+			return _List_fromArray(
+				[a]);
 		};
 		var onFocusAttribute = A2(
 			$elm$core$Maybe$withDefault,
@@ -5545,7 +5539,7 @@ var $author$project$Input$Float$input = F3(
 						function (f) {
 							return f(true);
 						},
-						options.r))));
+						options.q))));
 		var onBlurAttribute = A2(
 			$elm$core$Maybe$withDefault,
 			_List_Nil,
@@ -5560,7 +5554,7 @@ var $author$project$Input$Float$input = F3(
 						function (f) {
 							return f(false);
 						},
-						options.r))));
+						options.q))));
 		var minAttribute = A2(
 			$elm$core$Maybe$withDefault,
 			_List_Nil,
@@ -5570,7 +5564,7 @@ var $author$project$Input$Float$input = F3(
 				A2(
 					$elm$core$Maybe$map,
 					$elm$html$Html$Attributes$min,
-					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, options.l))));
+					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, options.s))));
 		var maxAttribute = A2(
 			$elm$core$Maybe$withDefault,
 			_List_Nil,
@@ -5580,7 +5574,7 @@ var $author$project$Input$Float$input = F3(
 				A2(
 					$elm$core$Maybe$map,
 					$elm$html$Html$Attributes$max,
-					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, options.k))));
+					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, options.m))));
 		return A2(
 			$elm$html$Html$input,
 			A2(
@@ -5622,10 +5616,10 @@ var $author$project$Input$Float$input = F3(
 	});
 var $author$project$MaximumInterestRateEditor$InputChanged = F2(
 	function (a, b) {
-		return {$: 1, a: a, b: b};
+		return {$: 0, a: a, b: b};
 	});
 var $author$project$Input$Float$defaultOptions = function (onInput) {
-	return {r: $elm$core$Maybe$Nothing, k: $elm$core$Maybe$Nothing, l: $elm$core$Maybe$Nothing, c: onInput};
+	return {q: $elm$core$Maybe$Nothing, m: $elm$core$Maybe$Nothing, s: $elm$core$Maybe$Nothing, c: onInput};
 };
 var $author$project$MaximumInterestRateEditor$inputOptions = function (field) {
 	var defaultOptions = $author$project$Input$Float$defaultOptions(
@@ -5633,8 +5627,8 @@ var $author$project$MaximumInterestRateEditor$inputOptions = function (field) {
 	return _Utils_update(
 		defaultOptions,
 		{
-			k: $elm$core$Maybe$Just(100),
-			l: $elm$core$Maybe$Just(0)
+			m: $elm$core$Maybe$Just(100),
+			s: $elm$core$Maybe$Just(0)
 		});
 };
 var $author$project$MaximumInterestRateEditor$percentageInput = F2(
@@ -5927,7 +5921,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.z))
+							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.D))
 						])),
 					A2(
 					$elm$html$Html$p,
@@ -5954,7 +5948,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.B))
+							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.F))
 						])),
 					A2(
 					$elm$html$Html$p,
@@ -5981,7 +5975,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.C))
+							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.G))
 						]))
 				]));
 	});
@@ -6116,7 +6110,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 																	]),
 																_List_fromArray(
 																	[
-																		A2($author$project$MaximumInterestRateEditor$percentageInput, 0, model.z)
+																		A2($author$project$MaximumInterestRateEditor$percentageInput, 0, model.D)
 																	])),
 																A2(
 																$elm$html$Html$label,
@@ -6137,7 +6131,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 																	]),
 																_List_fromArray(
 																	[
-																		A2($author$project$MaximumInterestRateEditor$percentageInput, 1, model.B)
+																		A2($author$project$MaximumInterestRateEditor$percentageInput, 1, model.F)
 																	])),
 																A2(
 																$elm$html$Html$label,
@@ -6158,7 +6152,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 																	]),
 																_List_fromArray(
 																	[
-																		A2($author$project$MaximumInterestRateEditor$percentageInput, 2, model.C)
+																		A2($author$project$MaximumInterestRateEditor$percentageInput, 2, model.G)
 																	]))
 															])),
 														A2(
