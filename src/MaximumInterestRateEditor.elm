@@ -25,6 +25,13 @@ type FieldType
     | Over6000
 
 
+type Quarter
+    = Q1
+    | Q2
+    | Q3
+    | Q4
+
+
 type alias FieldInfo =
     Maybe Float
 
@@ -113,7 +120,7 @@ percentageInput field fieldInfo formName =
             input
                 [ type_ "hidden"
                 , formName ++ "_rate" |> name
-                , rate * 100 |> Round.round 0 |> value
+                , rate * 100 |> Round.floor 0 |> value
                 ]
                 []
 
@@ -122,19 +129,83 @@ percentageInput field fieldInfo formName =
     ]
 
 
-showInterest : Int -> Maybe Float -> String
-showInterest n maybe_rate =
-    case maybe_rate of
-        Nothing ->
-            "-,-- %"
+days : Quarter -> List Int
+days quarter =
+    case quarter of
+        Q1 ->
+            [ 28, 31, 30, 31, 30, 31, 31, 30, 31 ]
 
-        Just rate ->
+        Q2 ->
+            [ 30, 31, 30, 31, 31, 30, 31, 30, 31 ]
+
+        Q3 ->
+            [ 30, 31, 30, 31, 31, 28, 31, 30, 31 ]
+
+        Q4 ->
+            [ 30, 31, 31, 28, 31, 30, 31, 30, 31 ]
+
+
+plan_builder : Int -> ( Int, List Int ) -> ( Int, List Int )
+plan_builder next ( previous, result ) =
+    let
+        val =
+            next + previous
+    in
+    ( val, val :: result )
+
+
+buildPlanDays : List Int -> List Int
+buildPlanDays plan_days =
+    List.foldl plan_builder ( 0, [] ) plan_days
+        |> Tuple.second
+        |> List.reverse
+
+
+quarterFromName : String -> Maybe Quarter
+quarterFromName name =
+    let
+        suffix =
+            String.right 2 name
+    in
+    case suffix of
+        "T1" ->
+            Just Q1
+
+        "T2" ->
+            Just Q2
+
+        "T3" ->
+            Just Q3
+
+        "T4" ->
+            Just Q4
+
+        _ ->
+            Nothing
+
+
+showInterest : Int -> Maybe Float -> Maybe Quarter -> String
+showInterest n maybe_rate maybe_quarter =
+    case ( maybe_rate, maybe_quarter ) of
+        ( Just rate, Just quarter ) ->
+            -- n = len(plans) + 1
+            -- 1 / n * (n - 1 - sum([1 / (1 + r) ** (t / 365) for t in plans]))
             let
+                sum =
+                    days quarter
+                        |> List.take (n - 1)
+                        |> buildPlanDays
+                        |> List.map (\t -> 1 / (1 + rate / 100) ^ (toFloat t / 365))
+                        |> List.sum
+
                 rounded_value =
-                    (((1 + rate / 100) ^ ((toFloat n - 1) / 12) - 1) * 10000 * (toFloat n - 1) / toFloat n)
-                        |> Round.round 0
+                    (1 / toFloat n * (toFloat n - 1 - sum) * 10000)
+                        |> Round.floor 0
             in
             rounded_value ++ " bps"
+
+        ( _, _ ) ->
+            "-,-- %"
 
 
 showTableFor : Int -> Model -> Html Msg
@@ -148,11 +219,11 @@ showTableFor x model =
     in
     div [ class "col-sm-12" ]
         [ p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.below3000 ]
+        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.below3000 <| quarterFromName model.publicationName ]
         , p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.over3000 ]
+        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.over3000 <| quarterFromName model.publicationName ]
         , p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.over6000 ]
+        , p [ class "col-sm-1 text-right" ] [ text <| showInterest x model.over6000 <| quarterFromName model.publicationName ]
         ]
 
 
