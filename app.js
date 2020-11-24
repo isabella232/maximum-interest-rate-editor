@@ -6333,20 +6333,18 @@ var $author$project$MaximumInterestRateEditor$showInterest = F2(
 			return '-,-- %';
 		} else {
 			var rate = maybe_rate.a;
-			var base_rate = (((A2($elm$core$Basics$pow, 1 + (rate / 100), 1 / 12) - 1) / (1 - A2($elm$core$Basics$pow, 1 + (rate / 100), -1))) * 12) - 1;
-			var rounded_value = A3(
-				$elm$core$String$replace,
-				'.',
-				',',
-				A2($myrho$elm_round$Round$round, 2, ((base_rate * (n - 1)) / 12) * 100));
-			return rounded_value + ' %';
+			var rounded_value = A2(
+				$myrho$elm_round$Round$round,
+				0,
+				(((A2($elm$core$Basics$pow, 1 + (rate / 100), (n - 1) / 12) - 1) * 10000) * (n - 1)) / n);
+			return rounded_value + ' bps';
 		}
 	});
 var $elm$html$Html$strong = _VirtualDom_node('strong');
 var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 	function (x, model) {
 		var months = $elm$core$String$fromInt(x);
-		var title = 'Payement en ' + (months + ' fois');
+		var title = 'Paiement en ' + (months + ' fois');
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
