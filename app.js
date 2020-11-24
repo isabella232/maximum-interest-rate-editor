@@ -6327,7 +6327,7 @@ var $author$project$Quarter$days = function (quarter) {
 				[28, 31, 30, 31, 30, 31, 31, 30, 31]);
 		case 1:
 			return _List_fromArray(
-				[30, 31, 30, 31, 31, 30, 31, 30, 31]);
+				[30, 31, 31, 30, 31, 30, 31, 31, 28]);
 		case 2:
 			return _List_fromArray(
 				[30, 31, 30, 31, 31, 28, 31, 30, 31]);
