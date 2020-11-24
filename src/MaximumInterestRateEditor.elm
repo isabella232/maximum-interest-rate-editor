@@ -144,7 +144,7 @@ showTableFor x model =
             String.fromInt x
 
         title =
-            "Payement en " ++ months ++ " fois"
+            "Paiement en " ++ months ++ " fois"
     in
     div [ class "col-sm-12" ]
         [ p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
