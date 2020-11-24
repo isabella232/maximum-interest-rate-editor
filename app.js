@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.Z.J === region.ag.J)
+	if (region.Z.K === region.ag.K)
 	{
-		return 'on line ' + region.Z.J;
+		return 'on line ' + region.Z.K;
 	}
-	return 'on lines ' + region.Z.J + ' through ' + region.ag.J;
+	return 'on lines ' + region.Z.K + ' through ' + region.ag.K;
 }
 
 
@@ -5457,10 +5457,10 @@ var $justinmimbs$date$Date$today = A3($elm$core$Task$map2, $justinmimbs$date$Dat
 var $author$project$MaximumInterestRateEditor$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			I: $elm$core$Maybe$Just(20.83),
-			K: $elm$core$Maybe$Just(10.16),
-			L: $elm$core$Maybe$Just(5.19),
-			M: ''
+			J: $elm$core$Maybe$Just(20.83),
+			L: $elm$core$Maybe$Just(10.16),
+			M: $elm$core$Maybe$Just(5.19),
+			y: ''
 		},
 		A2($elm$core$Task$perform, $author$project$MaximumInterestRateEditor$ReceiveDate, $justinmimbs$date$Date$today));
 };
@@ -5611,7 +5611,7 @@ var $author$project$MaximumInterestRateEditor$update = F2(
 					_Utils_update(
 						model,
 						{
-							M: $author$project$MaximumInterestRateEditor$publicationNameFromDate(today)
+							y: $author$project$MaximumInterestRateEditor$publicationNameFromDate(today)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 2:
@@ -5619,7 +5619,7 @@ var $author$project$MaximumInterestRateEditor$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{M: value}),
+						{y: value}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				switch (msg.a) {
@@ -5629,7 +5629,7 @@ var $author$project$MaximumInterestRateEditor$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{I: value}),
+								{J: value}),
 							$elm$core$Platform$Cmd$none);
 					case 1:
 						var _v2 = msg.a;
@@ -5637,7 +5637,7 @@ var $author$project$MaximumInterestRateEditor$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{K: value}),
+								{L: value}),
 							$elm$core$Platform$Cmd$none);
 					default:
 						var _v3 = msg.a;
@@ -5645,7 +5645,7 @@ var $author$project$MaximumInterestRateEditor$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{L: value}),
+								{M: value}),
 							$elm$core$Platform$Cmd$none);
 				}
 		}
@@ -5705,15 +5705,73 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
 		}
 	});
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $elm$core$String$foldr = _String_foldr;
+var $elm$core$String$toList = function (string) {
+	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
+};
+var $myrho$elm_round$Round$addSign = F2(
+	function (signed, str) {
+		var isNotZero = A2(
+			$elm$core$List$any,
+			function (c) {
+				return (c !== '0') && (c !== '.');
+			},
+			$elm$core$String$toList(str));
+		return _Utils_ap(
+			(signed && isNotZero) ? '-' : '',
+			str);
+	});
 var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$core$String$cons = _String_cons;
+var $elm$core$Char$fromCode = _Char_fromCode;
+var $myrho$elm_round$Round$increaseNum = function (_v0) {
+	var head = _v0.a;
+	var tail = _v0.b;
+	if (head === '9') {
+		var _v1 = $elm$core$String$uncons(tail);
+		if (_v1.$ === 1) {
+			return '01';
+		} else {
+			var headtail = _v1.a;
+			return A2(
+				$elm$core$String$cons,
+				'0',
+				$myrho$elm_round$Round$increaseNum(headtail));
+		}
+	} else {
+		var c = $elm$core$Char$toCode(head);
+		return ((c >= 48) && (c < 57)) ? A2(
+			$elm$core$String$cons,
+			$elm$core$Char$fromCode(c + 1),
+			tail) : '0';
+	}
+};
+var $elm$core$Basics$isInfinite = _Basics_isInfinite;
+var $elm$core$Basics$isNaN = _Basics_isNaN;
 var $elm$core$Maybe$map = F2(
 	function (f, maybe) {
 		if (!maybe.$) {
@@ -5722,6 +5780,195 @@ var $elm$core$Maybe$map = F2(
 				f(value));
 		} else {
 			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var $elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			$elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var $elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3($elm$core$String$repeatHelp, n, chunk, '');
+	});
+var $elm$core$String$padRight = F3(
+	function (n, _char, string) {
+		return _Utils_ap(
+			string,
+			A2(
+				$elm$core$String$repeat,
+				n - $elm$core$String$length(string),
+				$elm$core$String$fromChar(_char)));
+	});
+var $elm$core$String$reverse = _String_reverse;
+var $myrho$elm_round$Round$splitComma = function (str) {
+	var _v0 = A2($elm$core$String$split, '.', str);
+	if (_v0.b) {
+		if (_v0.b.b) {
+			var before = _v0.a;
+			var _v1 = _v0.b;
+			var after = _v1.a;
+			return _Utils_Tuple2(before, after);
+		} else {
+			var before = _v0.a;
+			return _Utils_Tuple2(before, '0');
+		}
+	} else {
+		return _Utils_Tuple2('0', '0');
+	}
+};
+var $elm$core$Tuple$mapFirst = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			func(x),
+			y);
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $myrho$elm_round$Round$toDecimal = function (fl) {
+	var _v0 = A2(
+		$elm$core$String$split,
+		'e',
+		$elm$core$String$fromFloat(
+			$elm$core$Basics$abs(fl)));
+	if (_v0.b) {
+		if (_v0.b.b) {
+			var num = _v0.a;
+			var _v1 = _v0.b;
+			var exp = _v1.a;
+			var e = A2(
+				$elm$core$Maybe$withDefault,
+				0,
+				$elm$core$String$toInt(
+					A2($elm$core$String$startsWith, '+', exp) ? A2($elm$core$String$dropLeft, 1, exp) : exp));
+			var _v2 = $myrho$elm_round$Round$splitComma(num);
+			var before = _v2.a;
+			var after = _v2.b;
+			var total = _Utils_ap(before, after);
+			var zeroed = (e < 0) ? A2(
+				$elm$core$Maybe$withDefault,
+				'0',
+				A2(
+					$elm$core$Maybe$map,
+					function (_v3) {
+						var a = _v3.a;
+						var b = _v3.b;
+						return a + ('.' + b);
+					},
+					A2(
+						$elm$core$Maybe$map,
+						$elm$core$Tuple$mapFirst($elm$core$String$fromChar),
+						$elm$core$String$uncons(
+							_Utils_ap(
+								A2(
+									$elm$core$String$repeat,
+									$elm$core$Basics$abs(e),
+									'0'),
+								total))))) : A3($elm$core$String$padRight, e + 1, '0', total);
+			return _Utils_ap(
+				(fl < 0) ? '-' : '',
+				zeroed);
+		} else {
+			var num = _v0.a;
+			return _Utils_ap(
+				(fl < 0) ? '-' : '',
+				num);
+		}
+	} else {
+		return '';
+	}
+};
+var $myrho$elm_round$Round$roundFun = F3(
+	function (functor, s, fl) {
+		if ($elm$core$Basics$isInfinite(fl) || $elm$core$Basics$isNaN(fl)) {
+			return $elm$core$String$fromFloat(fl);
+		} else {
+			var signed = fl < 0;
+			var _v0 = $myrho$elm_round$Round$splitComma(
+				$myrho$elm_round$Round$toDecimal(
+					$elm$core$Basics$abs(fl)));
+			var before = _v0.a;
+			var after = _v0.b;
+			var r = $elm$core$String$length(before) + s;
+			var normalized = _Utils_ap(
+				A2($elm$core$String$repeat, (-r) + 1, '0'),
+				A3(
+					$elm$core$String$padRight,
+					r,
+					'0',
+					_Utils_ap(before, after)));
+			var totalLen = $elm$core$String$length(normalized);
+			var roundDigitIndex = A2($elm$core$Basics$max, 1, r);
+			var increase = A2(
+				functor,
+				signed,
+				A3($elm$core$String$slice, roundDigitIndex, totalLen, normalized));
+			var remains = A3($elm$core$String$slice, 0, roundDigitIndex, normalized);
+			var num = increase ? $elm$core$String$reverse(
+				A2(
+					$elm$core$Maybe$withDefault,
+					'1',
+					A2(
+						$elm$core$Maybe$map,
+						$myrho$elm_round$Round$increaseNum,
+						$elm$core$String$uncons(
+							$elm$core$String$reverse(remains))))) : remains;
+			var numLen = $elm$core$String$length(num);
+			var numZeroed = (num === '0') ? num : ((s <= 0) ? _Utils_ap(
+				num,
+				A2(
+					$elm$core$String$repeat,
+					$elm$core$Basics$abs(s),
+					'0')) : ((_Utils_cmp(
+				s,
+				$elm$core$String$length(after)) < 0) ? (A3($elm$core$String$slice, 0, numLen - s, num) + ('.' + A3($elm$core$String$slice, numLen - s, numLen, num))) : _Utils_ap(
+				before + '.',
+				A3($elm$core$String$padRight, s, '0', after))));
+			return A2($myrho$elm_round$Round$addSign, signed, numZeroed);
+		}
+	});
+var $myrho$elm_round$Round$floor = $myrho$elm_round$Round$roundFun(
+	F2(
+		function (signed, str) {
+			var _v0 = $elm$core$String$uncons(str);
+			if (_v0.$ === 1) {
+				return false;
+			} else {
+				if ('0' === _v0.a.a) {
+					var _v1 = _v0.a;
+					var rest = _v1.b;
+					return signed && A2(
+						$elm$core$List$any,
+						$elm$core$Basics$neq('0'),
+						$elm$core$String$toList(rest));
+				} else {
+					return signed;
+				}
+			}
+		}));
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
 var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
@@ -5755,15 +6002,6 @@ var $elm$core$Maybe$map2 = F3(
 				return $elm$core$Maybe$Just(
 					A2(func, a, b));
 			}
-		}
-	});
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
 		}
 	});
 var $author$project$Input$Float$exceedMaxValue = F2(
@@ -5834,27 +6072,6 @@ var $author$project$Input$KeyCode$tab = 9;
 var $author$project$Input$KeyCode$upArrow = 38;
 var $author$project$Input$KeyCode$allowedKeyCodes = _List_fromArray(
 	[$author$project$Input$KeyCode$leftArrow, $author$project$Input$KeyCode$upArrow, $author$project$Input$KeyCode$rightArrow, $author$project$Input$KeyCode$downArrow, $author$project$Input$KeyCode$backspace, $author$project$Input$KeyCode$ctrl, $author$project$Input$KeyCode$alt, $author$project$Input$KeyCode$delete, $author$project$Input$KeyCode$tab, $author$project$Input$KeyCode$enter, $author$project$Input$KeyCode$shift]);
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
 var $author$project$Input$Decoder$Event = F5(
 	function (keyCode, ctrlKey, altKey, metaKey, shiftKey) {
 		return {aT: altKey, aY: ctrlKey, a4: keyCode, a5: metaKey, bb: shiftKey};
@@ -5870,11 +6087,6 @@ var $author$project$Input$Decoder$eventDecoder = A6(
 	A2($elm$json$Json$Decode$field, 'altKey', $elm$json$Json$Decode$bool),
 	A2($elm$json$Json$Decode$field, 'metaKey', $elm$json$Json$Decode$bool),
 	A2($elm$json$Json$Decode$field, 'shiftKey', $elm$json$Json$Decode$bool));
-var $elm$core$String$cons = _String_cons;
-var $elm$core$String$fromChar = function (_char) {
-	return A2($elm$core$String$cons, _char, '');
-};
-var $elm$core$Char$fromCode = _Char_fromCode;
 var $elm$core$Basics$not = _Basics_not;
 var $author$project$Input$Float$isValid = F2(
 	function (newValue, options) {
@@ -6053,224 +6265,6 @@ var $author$project$MaximumInterestRateEditor$inputOptions = function (field) {
 			w: $elm$core$Maybe$Just(0)
 		});
 };
-var $elm$core$Basics$abs = function (n) {
-	return (n < 0) ? (-n) : n;
-};
-var $elm$core$String$foldr = _String_foldr;
-var $elm$core$String$toList = function (string) {
-	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
-};
-var $myrho$elm_round$Round$addSign = F2(
-	function (signed, str) {
-		var isNotZero = A2(
-			$elm$core$List$any,
-			function (c) {
-				return (c !== '0') && (c !== '.');
-			},
-			$elm$core$String$toList(str));
-		return _Utils_ap(
-			(signed && isNotZero) ? '-' : '',
-			str);
-	});
-var $myrho$elm_round$Round$increaseNum = function (_v0) {
-	var head = _v0.a;
-	var tail = _v0.b;
-	if (head === '9') {
-		var _v1 = $elm$core$String$uncons(tail);
-		if (_v1.$ === 1) {
-			return '01';
-		} else {
-			var headtail = _v1.a;
-			return A2(
-				$elm$core$String$cons,
-				'0',
-				$myrho$elm_round$Round$increaseNum(headtail));
-		}
-	} else {
-		var c = $elm$core$Char$toCode(head);
-		return ((c >= 48) && (c < 57)) ? A2(
-			$elm$core$String$cons,
-			$elm$core$Char$fromCode(c + 1),
-			tail) : '0';
-	}
-};
-var $elm$core$Basics$isInfinite = _Basics_isInfinite;
-var $elm$core$Basics$isNaN = _Basics_isNaN;
-var $elm$core$Bitwise$and = _Bitwise_and;
-var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
-var $elm$core$String$repeatHelp = F3(
-	function (n, chunk, result) {
-		return (n <= 0) ? result : A3(
-			$elm$core$String$repeatHelp,
-			n >> 1,
-			_Utils_ap(chunk, chunk),
-			(!(n & 1)) ? result : _Utils_ap(result, chunk));
-	});
-var $elm$core$String$repeat = F2(
-	function (n, chunk) {
-		return A3($elm$core$String$repeatHelp, n, chunk, '');
-	});
-var $elm$core$String$padRight = F3(
-	function (n, _char, string) {
-		return _Utils_ap(
-			string,
-			A2(
-				$elm$core$String$repeat,
-				n - $elm$core$String$length(string),
-				$elm$core$String$fromChar(_char)));
-	});
-var $elm$core$String$reverse = _String_reverse;
-var $myrho$elm_round$Round$splitComma = function (str) {
-	var _v0 = A2($elm$core$String$split, '.', str);
-	if (_v0.b) {
-		if (_v0.b.b) {
-			var before = _v0.a;
-			var _v1 = _v0.b;
-			var after = _v1.a;
-			return _Utils_Tuple2(before, after);
-		} else {
-			var before = _v0.a;
-			return _Utils_Tuple2(before, '0');
-		}
-	} else {
-		return _Utils_Tuple2('0', '0');
-	}
-};
-var $elm$core$Tuple$mapFirst = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			func(x),
-			y);
-	});
-var $myrho$elm_round$Round$toDecimal = function (fl) {
-	var _v0 = A2(
-		$elm$core$String$split,
-		'e',
-		$elm$core$String$fromFloat(
-			$elm$core$Basics$abs(fl)));
-	if (_v0.b) {
-		if (_v0.b.b) {
-			var num = _v0.a;
-			var _v1 = _v0.b;
-			var exp = _v1.a;
-			var e = A2(
-				$elm$core$Maybe$withDefault,
-				0,
-				$elm$core$String$toInt(
-					A2($elm$core$String$startsWith, '+', exp) ? A2($elm$core$String$dropLeft, 1, exp) : exp));
-			var _v2 = $myrho$elm_round$Round$splitComma(num);
-			var before = _v2.a;
-			var after = _v2.b;
-			var total = _Utils_ap(before, after);
-			var zeroed = (e < 0) ? A2(
-				$elm$core$Maybe$withDefault,
-				'0',
-				A2(
-					$elm$core$Maybe$map,
-					function (_v3) {
-						var a = _v3.a;
-						var b = _v3.b;
-						return a + ('.' + b);
-					},
-					A2(
-						$elm$core$Maybe$map,
-						$elm$core$Tuple$mapFirst($elm$core$String$fromChar),
-						$elm$core$String$uncons(
-							_Utils_ap(
-								A2(
-									$elm$core$String$repeat,
-									$elm$core$Basics$abs(e),
-									'0'),
-								total))))) : A3($elm$core$String$padRight, e + 1, '0', total);
-			return _Utils_ap(
-				(fl < 0) ? '-' : '',
-				zeroed);
-		} else {
-			var num = _v0.a;
-			return _Utils_ap(
-				(fl < 0) ? '-' : '',
-				num);
-		}
-	} else {
-		return '';
-	}
-};
-var $myrho$elm_round$Round$roundFun = F3(
-	function (functor, s, fl) {
-		if ($elm$core$Basics$isInfinite(fl) || $elm$core$Basics$isNaN(fl)) {
-			return $elm$core$String$fromFloat(fl);
-		} else {
-			var signed = fl < 0;
-			var _v0 = $myrho$elm_round$Round$splitComma(
-				$myrho$elm_round$Round$toDecimal(
-					$elm$core$Basics$abs(fl)));
-			var before = _v0.a;
-			var after = _v0.b;
-			var r = $elm$core$String$length(before) + s;
-			var normalized = _Utils_ap(
-				A2($elm$core$String$repeat, (-r) + 1, '0'),
-				A3(
-					$elm$core$String$padRight,
-					r,
-					'0',
-					_Utils_ap(before, after)));
-			var totalLen = $elm$core$String$length(normalized);
-			var roundDigitIndex = A2($elm$core$Basics$max, 1, r);
-			var increase = A2(
-				functor,
-				signed,
-				A3($elm$core$String$slice, roundDigitIndex, totalLen, normalized));
-			var remains = A3($elm$core$String$slice, 0, roundDigitIndex, normalized);
-			var num = increase ? $elm$core$String$reverse(
-				A2(
-					$elm$core$Maybe$withDefault,
-					'1',
-					A2(
-						$elm$core$Maybe$map,
-						$myrho$elm_round$Round$increaseNum,
-						$elm$core$String$uncons(
-							$elm$core$String$reverse(remains))))) : remains;
-			var numLen = $elm$core$String$length(num);
-			var numZeroed = (num === '0') ? num : ((s <= 0) ? _Utils_ap(
-				num,
-				A2(
-					$elm$core$String$repeat,
-					$elm$core$Basics$abs(s),
-					'0')) : ((_Utils_cmp(
-				s,
-				$elm$core$String$length(after)) < 0) ? (A3($elm$core$String$slice, 0, numLen - s, num) + ('.' + A3($elm$core$String$slice, numLen - s, numLen, num))) : _Utils_ap(
-				before + '.',
-				A3($elm$core$String$padRight, s, '0', after))));
-			return A2($myrho$elm_round$Round$addSign, signed, numZeroed);
-		}
-	});
-var $myrho$elm_round$Round$round = $myrho$elm_round$Round$roundFun(
-	F2(
-		function (signed, str) {
-			var _v0 = $elm$core$String$uncons(str);
-			if (_v0.$ === 1) {
-				return false;
-			} else {
-				if ('5' === _v0.a.a) {
-					if (_v0.a.b === '') {
-						var _v1 = _v0.a;
-						return !signed;
-					} else {
-						var _v2 = _v0.a;
-						return true;
-					}
-				} else {
-					var _v3 = _v0.a;
-					var _int = _v3.a;
-					return function (i) {
-						return ((i > 53) && signed) || ((i >= 53) && (!signed));
-					}(
-						$elm$core$Char$toCode(_int));
-				}
-			}
-		}));
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
@@ -6316,7 +6310,7 @@ var $author$project$MaximumInterestRateEditor$percentageInput = F3(
 								$elm$html$Html$Attributes$type_('hidden'),
 								$elm$html$Html$Attributes$name(formName + '_rate'),
 								$elm$html$Html$Attributes$value(
-								A2($myrho$elm_round$Round$round, 0, rate * 100))
+								A2($myrho$elm_round$Round$floor, 0, rate * 100))
 							]),
 						_List_Nil);
 				} else {
@@ -6326,18 +6320,222 @@ var $author$project$MaximumInterestRateEditor$percentageInput = F3(
 			]);
 	});
 var $elm$html$Html$p = _VirtualDom_node('p');
-var $elm$core$Basics$pow = _Basics_pow;
-var $author$project$MaximumInterestRateEditor$showInterest = F2(
-	function (n, maybe_rate) {
-		if (maybe_rate.$ === 1) {
-			return '-,-- %';
+var $author$project$Quarter$days = function (quarter) {
+	switch (quarter) {
+		case 0:
+			return _List_fromArray(
+				[28, 31, 30, 31, 30, 31, 31, 30, 31]);
+		case 1:
+			return _List_fromArray(
+				[30, 31, 30, 31, 31, 30, 31, 30, 31]);
+		case 2:
+			return _List_fromArray(
+				[30, 31, 30, 31, 31, 28, 31, 30, 31]);
+		default:
+			return _List_fromArray(
+				[30, 31, 31, 28, 31, 30, 31, 30, 31]);
+	}
+};
+var $author$project$Quarter$plan_builder = F2(
+	function (next, _v0) {
+		var previous = _v0.a;
+		var result = _v0.b;
+		var val = next + previous;
+		return _Utils_Tuple2(
+			val,
+			A2($elm$core$List$cons, val, result));
+	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2($elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var $elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return $elm$core$List$reverse(
+			A3($elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var $elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
 		} else {
-			var rate = maybe_rate.a;
-			var rounded_value = A2(
-				$myrho$elm_round$Round$round,
-				0,
-				(((A2($elm$core$Basics$pow, 1 + (rate / 100), (n - 1) / 12) - 1) * 10000) * (n - 1)) / n);
+			var _v0 = _Utils_Tuple2(n, list);
+			_v0$1:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.b.b) {
+						return list;
+					} else {
+						if (_v0.b.b.b) {
+							switch (_v0.a) {
+								case 1:
+									break _v0$1;
+								case 2:
+									var _v2 = _v0.b;
+									var x = _v2.a;
+									var _v3 = _v2.b;
+									var y = _v3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_v0.b.b.b.b) {
+										var _v4 = _v0.b;
+										var x = _v4.a;
+										var _v5 = _v4.b;
+										var y = _v5.a;
+										var _v6 = _v5.b;
+										var z = _v6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _v0$5;
+									}
+								default:
+									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
+										var _v7 = _v0.b;
+										var x = _v7.a;
+										var _v8 = _v7.b;
+										var y = _v8.a;
+										var _v9 = _v8.b;
+										var z = _v9.a;
+										var _v10 = _v9.b;
+										var w = _v10.a;
+										var tl = _v10.b;
+										return (ctr > 1000) ? A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _v0$5;
+									}
+							}
+						} else {
+							if (_v0.a === 1) {
+								break _v0$1;
+							} else {
+								break _v0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _v1 = _v0.b;
+			var x = _v1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var $elm$core$List$take = F2(
+	function (n, list) {
+		return A3($elm$core$List$takeFast, 0, n, list);
+	});
+var $author$project$Quarter$buildPlanDays = F2(
+	function (quarter, n) {
+		return $elm$core$List$reverse(
+			A3(
+				$elm$core$List$foldl,
+				$author$project$Quarter$plan_builder,
+				_Utils_Tuple2(0, _List_Nil),
+				A2(
+					$elm$core$List$take,
+					n - 1,
+					$author$project$Quarter$days(quarter))).b);
+	});
+var $author$project$Quarter$Q1 = 0;
+var $author$project$Quarter$Q2 = 1;
+var $author$project$Quarter$Q3 = 2;
+var $author$project$Quarter$Q4 = 3;
+var $elm$core$String$right = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(
+			$elm$core$String$slice,
+			-n,
+			$elm$core$String$length(string),
+			string);
+	});
+var $author$project$Quarter$fromName = function (name) {
+	var suffix = A2($elm$core$String$right, 2, name);
+	switch (suffix) {
+		case 'T1':
+			return $elm$core$Maybe$Just(0);
+		case 'T2':
+			return $elm$core$Maybe$Just(1);
+		case 'T3':
+			return $elm$core$Maybe$Just(2);
+		case 'T4':
+			return $elm$core$Maybe$Just(3);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Basics$pow = _Basics_pow;
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $author$project$Interest$show = F3(
+	function (n, maybe_rate, publicationName) {
+		var maybe_quarter = $author$project$Quarter$fromName(publicationName);
+		var _v0 = _Utils_Tuple2(maybe_rate, maybe_quarter);
+		if ((!_v0.a.$) && (!_v0.b.$)) {
+			var rate = _v0.a.a;
+			var quarter = _v0.b.a;
+			var sum = $elm$core$List$sum(
+				A2(
+					$elm$core$List$map,
+					function (t) {
+						return 1 / A2($elm$core$Basics$pow, 1 + (rate / 100), t / 365);
+					},
+					A2($author$project$Quarter$buildPlanDays, quarter, n)));
+			var rounded_value = A2($myrho$elm_round$Round$floor, 0, ((1 / n) * ((n - 1) - sum)) * 10000);
 			return rounded_value + ' bps';
+		} else {
+			return '-,-- %';
 		}
 	});
 var $elm$html$Html$strong = _VirtualDom_node('strong');
@@ -6378,7 +6576,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.I))
+							A3($author$project$Interest$show, x, model.J, model.y))
 						])),
 					A2(
 					$elm$html$Html$p,
@@ -6405,7 +6603,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.K))
+							A3($author$project$Interest$show, x, model.L, model.y))
 						])),
 					A2(
 					$elm$html$Html$p,
@@ -6432,7 +6630,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							A2($author$project$MaximumInterestRateEditor$showInterest, x, model.L))
+							A3($author$project$Interest$show, x, model.M, model.y))
 						]))
 				]));
 	});
@@ -6477,7 +6675,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 										$elm$html$Html$Attributes$class('form-control'),
 										$elm$html$Html$Attributes$id('publication_name'),
 										$elm$html$Html$Attributes$name('publication_name'),
-										$elm$html$Html$Attributes$value(model.M),
+										$elm$html$Html$Attributes$value(model.y),
 										$elm$html$Html$Events$onInput($author$project$MaximumInterestRateEditor$SetPublicationName)
 									]),
 								_List_Nil)
@@ -6508,7 +6706,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 							[
 								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
-						A3($author$project$MaximumInterestRateEditor$percentageInput, 0, model.I, 'below_3000')),
+						A3($author$project$MaximumInterestRateEditor$percentageInput, 0, model.J, 'below_3000')),
 						A2(
 						$elm$html$Html$label,
 						_List_fromArray(
@@ -6526,7 +6724,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 							[
 								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
-						A3($author$project$MaximumInterestRateEditor$percentageInput, 1, model.K, 'over_3000')),
+						A3($author$project$MaximumInterestRateEditor$percentageInput, 1, model.L, 'over_3000')),
 						A2(
 						$elm$html$Html$label,
 						_List_fromArray(
@@ -6544,7 +6742,7 @@ var $author$project$MaximumInterestRateEditor$view = function (model) {
 							[
 								$elm$html$Html$Attributes$class('col-sm-2')
 							]),
-						A3($author$project$MaximumInterestRateEditor$percentageInput, 2, model.L, 'over_6000'))
+						A3($author$project$MaximumInterestRateEditor$percentageInput, 2, model.M, 'over_6000'))
 					])),
 				A2(
 				$elm$html$Html$div,
