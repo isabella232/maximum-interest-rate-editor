@@ -130,15 +130,15 @@ showTableFor x model =
             String.fromInt x
 
         title =
-            "Paiement en " ++ months ++ " fois"
+            "P" ++ months ++ "X"
     in
     div [ class "col-sm-12" ]
-        [ p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-right" ] [ text <| Interest.show x model.below3000 model.publicationName ]
-        , p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-right" ] [ text <| Interest.show x model.over3000 model.publicationName ]
-        , p [ class "col-sm-offset-1 col-sm-2" ] [ strong [] [ text title ] ]
-        , p [ class "col-sm-1 text-right" ] [ text <| Interest.show x model.over6000 model.publicationName ]
+        [ p [ class "col-sm-offset-1 col-sm-1" ] [ strong [] [ text title ] ]
+        , p [ class "col-sm-2 text-right" ] [ text <| Interest.show x model.below3000 model.publicationName ]
+        , p [ class "col-sm-offset-1 col-sm-1" ] [ strong [] [ text title ] ]
+        , p [ class "col-sm-2 text-right" ] [ text <| Interest.show x model.over3000 model.publicationName ]
+        , p [ class "col-sm-offset-1 col-sm-1" ] [ strong [] [ text title ] ]
+        , p [ class "col-sm-2 text-right" ] [ text <| Interest.show x model.over6000 model.publicationName ]
         ]
 
 
