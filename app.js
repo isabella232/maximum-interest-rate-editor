@@ -7895,7 +7895,7 @@ var $elm$html$Html$strong = _VirtualDom_node('strong');
 var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 	function (x, model) {
 		var months = $elm$core$String$fromInt(x);
-		var title = 'Paiement en ' + (months + ' fois');
+		var title = 'P' + (months + 'X');
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -7908,7 +7908,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-2')
+							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-1')
 						]),
 					_List_fromArray(
 						[
@@ -7924,7 +7924,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-1 text-right')
+							$elm$html$Html$Attributes$class('col-sm-2 text-right')
 						]),
 					_List_fromArray(
 						[
@@ -7935,7 +7935,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-2')
+							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-1')
 						]),
 					_List_fromArray(
 						[
@@ -7951,7 +7951,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-1 text-right')
+							$elm$html$Html$Attributes$class('col-sm-2 text-right')
 						]),
 					_List_fromArray(
 						[
@@ -7962,7 +7962,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-2')
+							$elm$html$Html$Attributes$class('col-sm-offset-1 col-sm-1')
 						]),
 					_List_fromArray(
 						[
@@ -7978,7 +7978,7 @@ var $author$project$MaximumInterestRateEditor$showTableFor = F2(
 					$elm$html$Html$p,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('col-sm-1 text-right')
+							$elm$html$Html$Attributes$class('col-sm-2 text-right')
 						]),
 					_List_fromArray(
 						[
