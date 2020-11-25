@@ -1,4 +1,6 @@
-module Quarter exposing (Quarter(..), buildPlanDays, fromName)
+module Quarter exposing (Quarter(..), days, fromName)
+
+import Days
 
 
 type Quarter
@@ -8,38 +10,28 @@ type Quarter
     | Q4
 
 
-days : Quarter -> List Int
+days : Quarter -> List (List Int)
 days quarter =
-    case quarter of
-        Q1 ->
-            [ 28, 31, 30, 31, 30, 31, 31, 30, 31 ]
-
-        Q2 ->
-            [ 30, 31, 30, 31, 31, 30, 31, 30, 31 ]
-
-        Q3 ->
-            [ 30, 31, 30, 31, 31, 28, 31, 30, 31 ]
-
-        Q4 ->
-            [ 30, 31, 31, 28, 31, 30, 31, 30, 31 ]
-
-
-plan_builder : Int -> ( Int, List Int ) -> ( Int, List Int )
-plan_builder next ( previous, result ) =
     let
-        val =
-            next + previous
+        days_candidates =
+            case quarter of
+                Q1 ->
+                    [ "2021-01-01", "2021-02-01", "2021-03-01", "2021-03-31" ]
+
+                Q2 ->
+                    [ "2021-04-01", "2021-05-01", "2021-06-01", "2021-06-30" ]
+
+                Q3 ->
+                    [ "2021-07-01", "2021-08-01", "2021-09-01", "2021-09-30" ]
+
+                Q4 ->
+                    [ "2021-10-01", "2021-11-01", "2021-12-01", "2021-12-31" ]
+
+        days_candidates_posix =
+            List.map Days.toPosix days_candidates
     in
-    ( val, val :: result )
-
-
-buildPlanDays : Quarter -> Int -> List Int
-buildPlanDays quarter n =
-    days quarter
-        |> List.take (n - 1)
-        |> List.foldl plan_builder ( 0, [] )
-        |> Tuple.second
-        |> List.reverse
+    days_candidates_posix
+        |> List.map Days.timeBetweenPayments
 
 
 fromName : String -> Maybe Quarter
