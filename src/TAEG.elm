@@ -6,7 +6,7 @@ import Days
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Input.Float as MaskedPercentage
+import Input.Float as CurrencyInput
 import Interest
 import Round
 import Task
@@ -22,14 +22,14 @@ type alias Model =
 
 
 type FieldType
-    = StartDate
-    | PurchaseAmount
-    | InstallmentsCount
+    = PurchaseAmount
     | PaidAmount
 
 
 type Msg
-    = InputChanged FieldType String
+    = DateChanged String
+    | InstallmentsCountChanged String
+    | CurrencyChanged FieldType (Maybe Float)
     | ReceiveDate Date
 
 
@@ -60,17 +60,17 @@ update msg model =
         ReceiveDate today ->
             ( { model | startDate = Date.toIsoString today |> Just }, Cmd.none )
 
-        InputChanged StartDate value ->
+        DateChanged value ->
             ( { model | startDate = Just value }, Cmd.none )
 
-        InputChanged PurchaseAmount value ->
-            ( { model | purchaseAmount = String.toFloat <| String.replace "," "." value }, Cmd.none )
+        CurrencyChanged PurchaseAmount value ->
+            ( { model | purchaseAmount = value }, Cmd.none )
 
-        InputChanged InstallmentsCount value ->
+        InstallmentsCountChanged value ->
             ( { model | installmentsCount = String.toInt value }, Cmd.none )
 
-        InputChanged PaidAmount value ->
-            ( { model | paidAmount = String.toFloat <| String.replace "," "." value }, Cmd.none )
+        CurrencyChanged PaidAmount value ->
+            ( { model | paidAmount = value }, Cmd.none )
 
 
 annual_interest_rate : Maybe String -> Maybe Float -> Maybe Int -> Maybe Float -> String
@@ -93,6 +93,28 @@ annual_interest_rate maybe_startDate maybe_purchaseAmount maybe_installmentsCoun
             "-,--"
 
 
+inputOptions : FieldType -> CurrencyInput.Options Msg
+inputOptions field =
+    let
+        defaultOptions =
+            CurrencyInput.defaultOptions (CurrencyChanged field)
+    in
+    { defaultOptions
+        | minValue = Just 0
+    }
+
+
+currencyInput : FieldType -> Maybe Float -> String -> Html Msg
+currencyInput field fieldInfo formName =
+    div [ class "input-group" ]
+        [ CurrencyInput.input
+            (inputOptions field)
+            [ class "form-control", id formName ]
+            fieldInfo
+        , span [ class "input-group-addon" ] [ text "€" ]
+        ]
+
+
 view : Model -> Html Msg
 view { startDate, purchaseAmount, installmentsCount, paidAmount } =
     div []
@@ -100,33 +122,12 @@ view { startDate, purchaseAmount, installmentsCount, paidAmount } =
             [ div [ class "form-group col-sm-6" ]
                 [ label [ for "purchase_amount", class "col-sm-6 control-label" ] [ text "Montant de l'achat" ]
                 , div [ class "col-sm-6" ]
-                    [ div [ class "input-group" ]
-                        [ input
-                            [ type_ "text"
-                            , class "form-control"
-                            , id "purchase_amount"
-                            , value <| String.replace "." "," <| String.fromFloat <| Maybe.withDefault 0 purchaseAmount
-                            , onInput <| InputChanged PurchaseAmount
-                            ]
-                            []
-                        , span [ class "input-group-addon" ] [ text "€" ]
-                        ]
-                    ]
+                    [ currencyInput PurchaseAmount purchaseAmount "purchase_amount" ]
                 ]
             , div [ class "form-group col-sm-6" ]
                 [ label [ for "paid_amount", class "col-sm-6 control-label" ] [ text "Montant payé" ]
                 , div [ class "col-sm-6" ]
-                    [ div [ class "input-group" ]
-                        [ input
-                            [ type_ "text"
-                            , class "form-control"
-                            , id "paid_amount"
-                            , value <| String.replace "." "," <| String.fromFloat <| Maybe.withDefault 0 paidAmount
-                            , onInput <| InputChanged PaidAmount
-                            ]
-                            []
-                        , span [ class "input-group-addon" ] [ text "€" ]
-                        ]
+                    [ currencyInput PaidAmount paidAmount "paid_amount"
                     ]
                 ]
             , div [ class "form-group col-sm-6" ]
@@ -138,7 +139,7 @@ view { startDate, purchaseAmount, installmentsCount, paidAmount } =
                         , style "padding-top" "0"
                         , id "start_date"
                         , value <| Maybe.withDefault "" startDate
-                        , onInput <| InputChanged StartDate
+                        , onInput <| DateChanged
                         ]
                         []
                     ]
@@ -152,7 +153,7 @@ view { startDate, purchaseAmount, installmentsCount, paidAmount } =
                             , class "form-control"
                             , id "installments_count"
                             , value <| String.fromInt <| Maybe.withDefault 0 installmentsCount
-                            , onInput <| InputChanged InstallmentsCount
+                            , onInput <| InstallmentsCountChanged
                             ]
                             []
                         , span [ class "input-group-addon" ] [ text "fois" ]
