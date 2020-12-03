@@ -22,7 +22,8 @@ type alias Model =
 
 
 type FieldType
-    = PurchaseAmount
+    = StartDate
+    | PurchaseAmount
     | InstallmentsCount
     | PaidAmount
 
@@ -59,14 +60,17 @@ update msg model =
         ReceiveDate today ->
             ( { model | startDate = Date.toIsoString today |> Just }, Cmd.none )
 
+        InputChanged StartDate value ->
+            ( { model | startDate = Just value }, Cmd.none )
+
         InputChanged PurchaseAmount value ->
-            ( { model | purchaseAmount = String.toFloat value }, Cmd.none )
+            ( { model | purchaseAmount = String.toFloat <| String.replace "," "." value }, Cmd.none )
 
         InputChanged InstallmentsCount value ->
             ( { model | installmentsCount = String.toInt value }, Cmd.none )
 
         InputChanged PaidAmount value ->
-            ( { model | paidAmount = String.toFloat value }, Cmd.none )
+            ( { model | paidAmount = String.toFloat <| String.replace "," "." value }, Cmd.none )
 
 
 annual_interest_rate : Maybe String -> Maybe Float -> Maybe Int -> Maybe Float -> String
@@ -93,50 +97,72 @@ view : Model -> Html Msg
 view { startDate, purchaseAmount, installmentsCount, paidAmount } =
     div []
         [ div [ class "col-sm-6" ]
-            [ div [ class "form-group" ]
-                [ label [ for "purchase_amount", class "col-sm-2 control-label" ] [ text "Montant de l'achat" ]
-                , div [ class "col-sm-10" ]
+            [ div [ class "form-group col-sm-6" ]
+                [ label [ for "purchase_amount", class "col-sm-6 control-label" ] [ text "Montant de l'achat" ]
+                , div [ class "col-sm-6" ]
+                    [ div [ class "input-group" ]
+                        [ input
+                            [ type_ "text"
+                            , class "form-control"
+                            , id "purchase_amount"
+                            , value <| String.replace "." "," <| String.fromFloat <| Maybe.withDefault 0 purchaseAmount
+                            , onInput <| InputChanged PurchaseAmount
+                            ]
+                            []
+                        , span [ class "input-group-addon" ] [ text "€" ]
+                        ]
+                    ]
+                ]
+            , div [ class "form-group col-sm-6" ]
+                [ label [ for "paid_amount", class "col-sm-6 control-label" ] [ text "Montant payé" ]
+                , div [ class "col-sm-6" ]
+                    [ div [ class "input-group" ]
+                        [ input
+                            [ type_ "text"
+                            , class "form-control"
+                            , id "paid_amount"
+                            , value <| String.replace "." "," <| String.fromFloat <| Maybe.withDefault 0 paidAmount
+                            , onInput <| InputChanged PaidAmount
+                            ]
+                            []
+                        , span [ class "input-group-addon" ] [ text "€" ]
+                        ]
+                    ]
+                ]
+            , div [ class "form-group col-sm-6" ]
+                [ label [ for "start_date", class "col-sm-6 control-label" ] [ text "Date d'achat" ]
+                , div [ class "col-sm-6" ]
                     [ input
-                        [ type_ "text"
+                        [ type_ "date"
                         , class "form-control"
-                        , id "purchase_amount"
-                        , value <| String.fromFloat <| Maybe.withDefault 0 purchaseAmount
-                        , onInput <| InputChanged PurchaseAmount
+                        , style "padding-top" "0"
+                        , id "start_date"
+                        , value <| Maybe.withDefault "" startDate
+                        , onInput <| InputChanged StartDate
                         ]
                         []
                     ]
                 ]
-            , div [ class "form-group" ]
-                [ label [ for "installments_count", class "col-sm-2 control-label" ] [ text "Nombre d'échéances" ]
-                , div [ class "col-sm-10" ]
-                    [ input
-                        [ type_ "text"
-                        , class "form-control"
-                        , id "installments_count"
-                        , value <| String.fromInt <| Maybe.withDefault 0 installmentsCount
-                        , onInput <| InputChanged InstallmentsCount
+            , div [ class "form-group col-sm-6" ]
+                [ label [ for "installments_count", class "col-sm-6 control-label" ] [ text "Nombre d'échéances" ]
+                , div [ class "col-sm-6" ]
+                    [ div [ class "input-group" ]
+                        [ input
+                            [ type_ "text"
+                            , class "form-control"
+                            , id "installments_count"
+                            , value <| String.fromInt <| Maybe.withDefault 0 installmentsCount
+                            , onInput <| InputChanged InstallmentsCount
+                            ]
+                            []
+                        , span [ class "input-group-addon" ] [ text "fois" ]
                         ]
-                        []
-                    ]
-                ]
-            , div [ class "form-group" ]
-                [ label [ for "paid_amount", class "col-sm-2 control-label" ] [ text "Montant payé" ]
-                , div [ class "col-sm-10" ]
-                    [ input
-                        [ type_ "text"
-                        , class "form-control"
-                        , id "paid_amount"
-                        , value <| String.fromFloat <| Maybe.withDefault 0 paidAmount
-                        , onInput <| InputChanged PaidAmount
-                        ]
-                        []
                     ]
                 ]
             ]
         , div [ class "col-sm-6" ]
             [ p []
-                [ br [] []
-                , h1 [ class "text-center" ]
+                [ h1 [ class "text-center" ]
                     [ text "Votre TAEG pour ce paiement est de "
                     , text <| annual_interest_rate startDate purchaseAmount installmentsCount paidAmount
                     , text "%"
