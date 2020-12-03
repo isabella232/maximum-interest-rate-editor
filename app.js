@@ -7092,7 +7092,7 @@ var $author$project$Interest$annual_interest_rate = F3(
 				return '-,--';
 			} else {
 				var taeg = maybe_taeg.a;
-				return A3(
+				return (taeg > 10) ? '-,--' : A3(
 					$elm$core$String$replace,
 					'.',
 					',',
