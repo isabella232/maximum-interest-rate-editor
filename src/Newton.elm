@@ -1,7 +1,7 @@
 module Newton exposing (optimize)
 
--- Gradient descent method (https://fr.wikipedia.org/wiki/M%C3%A9thode_de_Newton)
--- Code extracted from SciPy (use `scipy.optimize.newton??` inside IPython), then simplified
+-- Newton Secant method
+-- https://en.wikipedia.org/wiki/Secant_method
 
 
 maxiter =
