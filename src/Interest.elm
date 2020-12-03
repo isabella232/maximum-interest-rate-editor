@@ -74,7 +74,7 @@ annual_interest_rate purchase_amount customer_fee planDurations =
                 \x -> 1 - n * (1 - customer_fees_rate) + f_sum x
 
             maybe_taeg =
-                Newton.optimize f 0
+                Newton.optimize f
         in
         case maybe_taeg of
             Nothing ->
