@@ -5356,7 +5356,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$TAEG$ReceiveDate = function (a) {
-	return {$: 1, a: a};
+	return {$: 3, a: a};
 };
 var $justinmimbs$date$Date$RD = $elm$core$Basics$identity;
 var $elm$core$Basics$clamp = F3(
@@ -5598,14 +5598,6 @@ var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
-	});
-var $elm$core$String$toFloat = _String_toFloat;
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -6724,71 +6716,63 @@ var $justinmimbs$date$Date$format = function (pattern) {
 var $justinmimbs$date$Date$toIsoString = $justinmimbs$date$Date$format('yyyy-MM-dd');
 var $author$project$TAEG$update = F2(
 	function (msg, model) {
-		if (msg.$ === 1) {
-			var today = msg.a;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{
-						N: $elm$core$Maybe$Just(
-							$justinmimbs$date$Date$toIsoString(today))
-					}),
-				$elm$core$Platform$Cmd$none);
-		} else {
-			switch (msg.a) {
-				case 0:
+		switch (msg.$) {
+			case 3:
+				var today = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							N: $elm$core$Maybe$Just(
+								$justinmimbs$date$Date$toIsoString(today))
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 0:
+				var value = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							N: $elm$core$Maybe$Just(value)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 1:
+				var value = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							S: $elm$core$String$toInt(value)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				if (!msg.a) {
 					var _v1 = msg.a;
 					var value = msg.b;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{
-								N: $elm$core$Maybe$Just(value)
-							}),
+							{V: value}),
 						$elm$core$Platform$Cmd$none);
-				case 1:
+				} else {
 					var _v2 = msg.a;
 					var value = msg.b;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{
-								V: $elm$core$String$toFloat(
-									A3($elm$core$String$replace, ',', '.', value))
-							}),
+							{U: value}),
 						$elm$core$Platform$Cmd$none);
-				case 2:
-					var _v3 = msg.a;
-					var value = msg.b;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								S: $elm$core$String$toInt(value)
-							}),
-						$elm$core$Platform$Cmd$none);
-				default:
-					var _v4 = msg.a;
-					var value = msg.b;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								U: $elm$core$String$toFloat(
-									A3($elm$core$String$replace, ',', '.', value))
-							}),
-						$elm$core$Platform$Cmd$none);
-			}
+				}
 		}
 	});
-var $author$project$TAEG$InputChanged = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
-var $author$project$TAEG$InstallmentsCount = 2;
-var $author$project$TAEG$PaidAmount = 3;
-var $author$project$TAEG$PurchaseAmount = 1;
-var $author$project$TAEG$StartDate = 0;
+var $author$project$TAEG$DateChanged = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$TAEG$InstallmentsCountChanged = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$TAEG$PaidAmount = 1;
+var $author$project$TAEG$PurchaseAmount = 0;
 var $author$project$Newton$eps = 1.0e-4;
 var $author$project$Newton$maxiter = 50;
 var $author$project$Newton$abs_tol = 1.48e-8;
@@ -7676,6 +7660,7 @@ var $author$project$Days$timeBetweenPayments = function (starting_date) {
 		$author$project$Days$schedulePaymentDates(starting_date));
 };
 var $elm$core$Basics$round = _Basics_round;
+var $elm$core$String$toFloat = _String_toFloat;
 var $rtfeldman$elm_iso8601_date_strings$Iso8601$fractionsOfASecondInMs = A2(
 	$elm$parser$Parser$andThen,
 	function (str) {
@@ -8077,24 +8062,77 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
 var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$label = _VirtualDom_node('label');
-var $elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 1, a: a};
+var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
+var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 0, a: a};
 };
 var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$stopPropagationOn = F2(
+var $elm$html$Html$Events$on = F2(
 	function (event, decoder) {
 		return A2(
 			$elm$virtual_dom$VirtualDom$on,
 			event,
-			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onBlur = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'blur',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$core$Maybe$map2 = F3(
+	function (func, ma, mb) {
+		if (ma.$ === 1) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var a = ma.a;
+			if (mb.$ === 1) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				return $elm$core$Maybe$Just(
+					A2(func, a, b));
+			}
+		}
+	});
+var $author$project$Input$Float$exceedMaxValue = F2(
+	function (maxValue, maybeNumber) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			false,
+			A3(
+				$elm$core$Maybe$map2,
+				F2(
+					function (max, number) {
+						return _Utils_cmp(number, max) > 0;
+					}),
+				maxValue,
+				maybeNumber));
+	});
+var $author$project$Input$Float$lessThanMinValue = F2(
+	function (minValue, maybeNumber) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			false,
+			A3(
+				$elm$core$Maybe$map2,
+				F2(
+					function (min, number) {
+						return _Utils_cmp(number, min) < 0;
+					}),
+				minValue,
+				maybeNumber));
 	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$at = F2(
@@ -8107,6 +8145,45 @@ var $elm$html$Html$Events$targetValue = A2(
 	_List_fromArray(
 		['target', 'value']),
 	$elm$json$Json$Decode$string);
+var $author$project$Input$Float$onChange = function (options) {
+	var checkWithMinValue = function (number) {
+		return A2($author$project$Input$Float$lessThanMinValue, options.w, number) ? options.w : number;
+	};
+	var checkWithMaxValue = function (number) {
+		return A2($author$project$Input$Float$exceedMaxValue, options.q, number) ? options.q : number;
+	};
+	var toFloat = function (string) {
+		return checkWithMaxValue(
+			checkWithMinValue(
+				$elm$core$String$toFloat(string)));
+	};
+	return A2(
+		$elm$html$Html$Events$on,
+		'change',
+		A2(
+			$elm$json$Json$Decode$map,
+			A2($elm$core$Basics$composeR, toFloat, options.g),
+			$elm$html$Html$Events$targetValue));
+};
+var $elm$html$Html$Events$onFocus = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'focus',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
 var $elm$html$Html$Events$onInput = function (tagger) {
 	return A2(
 		$elm$html$Html$Events$stopPropagationOn,
@@ -8116,14 +8193,250 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
-var $elm$html$Html$p = _VirtualDom_node('p');
-var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Input$KeyCode$alt = 18;
+var $author$project$Input$KeyCode$backspace = 8;
+var $author$project$Input$KeyCode$ctrl = 17;
+var $author$project$Input$KeyCode$delete = 46;
+var $author$project$Input$KeyCode$downArrow = 40;
+var $author$project$Input$KeyCode$enter = 13;
+var $author$project$Input$KeyCode$leftArrow = 37;
+var $author$project$Input$KeyCode$rightArrow = 39;
+var $author$project$Input$KeyCode$shift = 16;
+var $author$project$Input$KeyCode$tab = 9;
+var $author$project$Input$KeyCode$upArrow = 38;
+var $author$project$Input$KeyCode$allowedKeyCodes = _List_fromArray(
+	[$author$project$Input$KeyCode$leftArrow, $author$project$Input$KeyCode$upArrow, $author$project$Input$KeyCode$rightArrow, $author$project$Input$KeyCode$downArrow, $author$project$Input$KeyCode$backspace, $author$project$Input$KeyCode$ctrl, $author$project$Input$KeyCode$alt, $author$project$Input$KeyCode$delete, $author$project$Input$KeyCode$tab, $author$project$Input$KeyCode$enter, $author$project$Input$KeyCode$shift]);
+var $author$project$Input$Decoder$Event = F5(
+	function (keyCode, ctrlKey, altKey, metaKey, shiftKey) {
+		return {a$: altKey, a4: ctrlKey, bc: keyCode, bd: metaKey, bj: shiftKey};
+	});
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $elm$json$Json$Decode$map5 = _Json_map5;
+var $author$project$Input$Decoder$eventDecoder = A6(
+	$elm$json$Json$Decode$map5,
+	$author$project$Input$Decoder$Event,
+	A2($elm$json$Json$Decode$field, 'keyCode', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'ctrlKey', $elm$json$Json$Decode$bool),
+	A2($elm$json$Json$Decode$field, 'altKey', $elm$json$Json$Decode$bool),
+	A2($elm$json$Json$Decode$field, 'metaKey', $elm$json$Json$Decode$bool),
+	A2($elm$json$Json$Decode$field, 'shiftKey', $elm$json$Json$Decode$bool));
+var $author$project$Input$Float$isValid = F2(
+	function (newValue, options) {
+		var updatedNumber = $elm$core$String$toFloat(newValue);
+		return !A2($author$project$Input$Float$exceedMaxValue, options.q, updatedNumber);
+	});
+var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
+	return {$: 2, a: a};
+};
+var $elm$html$Html$Events$preventDefaultOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
+	});
+var $author$project$Input$Float$onKeyDown = F2(
+	function (options, currentValue) {
+		var newValue = function (keyCode) {
+			return _Utils_ap(
+				A2(
+					$elm$core$Maybe$withDefault,
+					'',
+					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, currentValue)),
+				$elm$core$String$fromChar(
+					$elm$core$Char$fromCode(keyCode)));
+		};
+		var isNumber = function (keyCode) {
+			return ((keyCode >= 48) && (keyCode <= 57)) || (keyCode === 190);
+		};
+		var isNumPad = function (keyCode) {
+			return (keyCode >= 96) && (keyCode <= 105);
+		};
+		var filterKey = function (event) {
+			return (event.a4 || (event.a$ || event.bd)) ? _Utils_Tuple2(
+				options.g(currentValue),
+				false) : (event.bj ? _Utils_Tuple2(
+				options.g(currentValue),
+				false) : (A2(
+				$elm$core$List$any,
+				$elm$core$Basics$eq(event.bc),
+				$author$project$Input$KeyCode$allowedKeyCodes) ? _Utils_Tuple2(
+				options.g(currentValue),
+				false) : (((isNumber(event.bc) || isNumPad(event.bc)) && A2(
+				$author$project$Input$Float$isValid,
+				newValue(event.bc),
+				options)) ? _Utils_Tuple2(
+				options.g(
+					$elm$core$String$toFloat(
+						newValue(event.bc))),
+				false) : _Utils_Tuple2(
+				options.g(currentValue),
+				true))));
+		};
+		var decoder = A2($elm$json$Json$Decode$map, filterKey, $author$project$Input$Decoder$eventDecoder);
+		return A2($elm$html$Html$Events$preventDefaultOn, 'keydown', decoder);
+	});
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Input$Float$input = F3(
+	function (options, attributes, currentValue) {
+		var toArray = function (a) {
+			return _List_fromArray(
+				[a]);
+		};
+		var onFocusAttribute = A2(
+			$elm$core$Maybe$withDefault,
+			_List_Nil,
+			A2(
+				$elm$core$Maybe$map,
+				toArray,
+				A2(
+					$elm$core$Maybe$map,
+					$elm$html$Html$Events$onFocus,
+					A2(
+						$elm$core$Maybe$map,
+						function (f) {
+							return f(true);
+						},
+						options.u))));
+		var onBlurAttribute = A2(
+			$elm$core$Maybe$withDefault,
+			_List_Nil,
+			A2(
+				$elm$core$Maybe$map,
+				toArray,
+				A2(
+					$elm$core$Maybe$map,
+					$elm$html$Html$Events$onBlur,
+					A2(
+						$elm$core$Maybe$map,
+						function (f) {
+							return f(false);
+						},
+						options.u))));
+		var minAttribute = A2(
+			$elm$core$Maybe$withDefault,
+			_List_Nil,
+			A2(
+				$elm$core$Maybe$map,
+				toArray,
+				A2(
+					$elm$core$Maybe$map,
+					$elm$html$Html$Attributes$min,
+					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, options.w))));
+		var maxAttribute = A2(
+			$elm$core$Maybe$withDefault,
+			_List_Nil,
+			A2(
+				$elm$core$Maybe$map,
+				toArray,
+				A2(
+					$elm$core$Maybe$map,
+					$elm$html$Html$Attributes$max,
+					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, options.q))));
+		return A2(
+			$elm$html$Html$input,
+			A2(
+				$elm$core$List$append,
+				minAttribute,
+				A2(
+					$elm$core$List$append,
+					maxAttribute,
+					A2(
+						$elm$core$List$append,
+						onBlurAttribute,
+						A2(
+							$elm$core$List$append,
+							onFocusAttribute,
+							A2(
+								$elm$core$List$append,
+								attributes,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value(
+										A3(
+											$elm$core$String$replace,
+											'.',
+											',',
+											A2(
+												$elm$core$Maybe$withDefault,
+												'',
+												A2($elm$core$Maybe$map, $elm$core$String$fromFloat, currentValue)))),
+										A2($author$project$Input$Float$onKeyDown, options, currentValue),
+										$elm$html$Html$Events$onInput(
+										A2(
+											$elm$core$Basics$composeR,
+											A2($elm$core$String$replace, ',', '.'),
+											A2($elm$core$Basics$composeR, $elm$core$String$toFloat, options.g))),
+										$author$project$Input$Float$onChange(options),
+										$elm$html$Html$Attributes$type_('number')
+									])))))),
+			_List_Nil);
+	});
+var $author$project$TAEG$CurrencyChanged = F2(
+	function (a, b) {
+		return {$: 2, a: a, b: b};
+	});
+var $author$project$Input$Float$defaultOptions = function (onInput) {
+	return {u: $elm$core$Maybe$Nothing, q: $elm$core$Maybe$Nothing, w: $elm$core$Maybe$Nothing, g: onInput};
+};
+var $author$project$TAEG$inputOptions = function (field) {
+	var defaultOptions = $author$project$Input$Float$defaultOptions(
+		$author$project$TAEG$CurrencyChanged(field));
+	return _Utils_update(
+		defaultOptions,
+		{
+			w: $elm$core$Maybe$Just(0)
+		});
+};
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$TAEG$currencyInput = F3(
+	function (field, fieldInfo, formName) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('input-group')
+				]),
+			_List_fromArray(
+				[
+					A3(
+					$author$project$Input$Float$input,
+					$author$project$TAEG$inputOptions(field),
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('form-control'),
+							$elm$html$Html$Attributes$id(formName)
+						]),
+					fieldInfo),
+					A2(
+					$elm$html$Html$span,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('input-group-addon')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('€')
+						]))
+				]));
+	});
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $author$project$TAEG$view = function (_v0) {
 	var startDate = _v0.N;
 	var purchaseAmount = _v0.V;
@@ -8169,43 +8482,7 @@ var $author$project$TAEG$view = function (_v0) {
 									]),
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('input-group')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$input,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$type_('text'),
-														$elm$html$Html$Attributes$class('form-control'),
-														$elm$html$Html$Attributes$id('purchase_amount'),
-														$elm$html$Html$Attributes$value(
-														A3(
-															$elm$core$String$replace,
-															'.',
-															',',
-															$elm$core$String$fromFloat(
-																A2($elm$core$Maybe$withDefault, 0, purchaseAmount)))),
-														$elm$html$Html$Events$onInput(
-														$author$project$TAEG$InputChanged(1))
-													]),
-												_List_Nil),
-												A2(
-												$elm$html$Html$span,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('input-group-addon')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('€')
-													]))
-											]))
+										A3($author$project$TAEG$currencyInput, 0, purchaseAmount, 'purchase_amount')
 									]))
 							])),
 						A2(
@@ -8235,43 +8512,7 @@ var $author$project$TAEG$view = function (_v0) {
 									]),
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('input-group')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$input,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$type_('text'),
-														$elm$html$Html$Attributes$class('form-control'),
-														$elm$html$Html$Attributes$id('paid_amount'),
-														$elm$html$Html$Attributes$value(
-														A3(
-															$elm$core$String$replace,
-															'.',
-															',',
-															$elm$core$String$fromFloat(
-																A2($elm$core$Maybe$withDefault, 0, paidAmount)))),
-														$elm$html$Html$Events$onInput(
-														$author$project$TAEG$InputChanged(3))
-													]),
-												_List_Nil),
-												A2(
-												$elm$html$Html$span,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('input-group-addon')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('€')
-													]))
-											]))
+										A3($author$project$TAEG$currencyInput, 1, paidAmount, 'paid_amount')
 									]))
 							])),
 						A2(
@@ -8311,8 +8552,7 @@ var $author$project$TAEG$view = function (_v0) {
 												$elm$html$Html$Attributes$id('start_date'),
 												$elm$html$Html$Attributes$value(
 												A2($elm$core$Maybe$withDefault, '', startDate)),
-												$elm$html$Html$Events$onInput(
-												$author$project$TAEG$InputChanged(0))
+												$elm$html$Html$Events$onInput($author$project$TAEG$DateChanged)
 											]),
 										_List_Nil)
 									]))
@@ -8362,8 +8602,7 @@ var $author$project$TAEG$view = function (_v0) {
 														$elm$html$Html$Attributes$value(
 														$elm$core$String$fromInt(
 															A2($elm$core$Maybe$withDefault, 0, installmentsCount))),
-														$elm$html$Html$Events$onInput(
-														$author$project$TAEG$InputChanged(2))
+														$elm$html$Html$Events$onInput($author$project$TAEG$InstallmentsCountChanged)
 													]),
 												_List_Nil),
 												A2(
@@ -8511,287 +8750,10 @@ var $myrho$elm_round$Round$floor = $myrho$elm_round$Round$roundFun(
 				}
 			}
 		}));
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
-var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onBlur = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'blur',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $elm$core$Maybe$map2 = F3(
-	function (func, ma, mb) {
-		if (ma.$ === 1) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			var a = ma.a;
-			if (mb.$ === 1) {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var b = mb.a;
-				return $elm$core$Maybe$Just(
-					A2(func, a, b));
-			}
-		}
-	});
-var $author$project$Input$Float$exceedMaxValue = F2(
-	function (maxValue, maybeNumber) {
-		return A2(
-			$elm$core$Maybe$withDefault,
-			false,
-			A3(
-				$elm$core$Maybe$map2,
-				F2(
-					function (max, number) {
-						return _Utils_cmp(number, max) > 0;
-					}),
-				maxValue,
-				maybeNumber));
-	});
-var $author$project$Input$Float$lessThanMinValue = F2(
-	function (minValue, maybeNumber) {
-		return A2(
-			$elm$core$Maybe$withDefault,
-			false,
-			A3(
-				$elm$core$Maybe$map2,
-				F2(
-					function (min, number) {
-						return _Utils_cmp(number, min) < 0;
-					}),
-				minValue,
-				maybeNumber));
-	});
-var $author$project$Input$Float$onChange = function (options) {
-	var checkWithMinValue = function (number) {
-		return A2($author$project$Input$Float$lessThanMinValue, options.w, number) ? options.w : number;
-	};
-	var checkWithMaxValue = function (number) {
-		return A2($author$project$Input$Float$exceedMaxValue, options.q, number) ? options.q : number;
-	};
-	var toFloat = function (string) {
-		return checkWithMaxValue(
-			checkWithMinValue(
-				$elm$core$String$toFloat(string)));
-	};
-	return A2(
-		$elm$html$Html$Events$on,
-		'change',
-		A2(
-			$elm$json$Json$Decode$map,
-			A2($elm$core$Basics$composeR, toFloat, options.g),
-			$elm$html$Html$Events$targetValue));
-};
-var $elm$html$Html$Events$onFocus = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'focus',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $author$project$Input$KeyCode$alt = 18;
-var $author$project$Input$KeyCode$backspace = 8;
-var $author$project$Input$KeyCode$ctrl = 17;
-var $author$project$Input$KeyCode$delete = 46;
-var $author$project$Input$KeyCode$downArrow = 40;
-var $author$project$Input$KeyCode$enter = 13;
-var $author$project$Input$KeyCode$leftArrow = 37;
-var $author$project$Input$KeyCode$rightArrow = 39;
-var $author$project$Input$KeyCode$shift = 16;
-var $author$project$Input$KeyCode$tab = 9;
-var $author$project$Input$KeyCode$upArrow = 38;
-var $author$project$Input$KeyCode$allowedKeyCodes = _List_fromArray(
-	[$author$project$Input$KeyCode$leftArrow, $author$project$Input$KeyCode$upArrow, $author$project$Input$KeyCode$rightArrow, $author$project$Input$KeyCode$downArrow, $author$project$Input$KeyCode$backspace, $author$project$Input$KeyCode$ctrl, $author$project$Input$KeyCode$alt, $author$project$Input$KeyCode$delete, $author$project$Input$KeyCode$tab, $author$project$Input$KeyCode$enter, $author$project$Input$KeyCode$shift]);
-var $author$project$Input$Decoder$Event = F5(
-	function (keyCode, ctrlKey, altKey, metaKey, shiftKey) {
-		return {a$: altKey, a4: ctrlKey, bc: keyCode, bd: metaKey, bj: shiftKey};
-	});
-var $elm$json$Json$Decode$bool = _Json_decodeBool;
-var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $elm$json$Json$Decode$map5 = _Json_map5;
-var $author$project$Input$Decoder$eventDecoder = A6(
-	$elm$json$Json$Decode$map5,
-	$author$project$Input$Decoder$Event,
-	A2($elm$json$Json$Decode$field, 'keyCode', $elm$json$Json$Decode$int),
-	A2($elm$json$Json$Decode$field, 'ctrlKey', $elm$json$Json$Decode$bool),
-	A2($elm$json$Json$Decode$field, 'altKey', $elm$json$Json$Decode$bool),
-	A2($elm$json$Json$Decode$field, 'metaKey', $elm$json$Json$Decode$bool),
-	A2($elm$json$Json$Decode$field, 'shiftKey', $elm$json$Json$Decode$bool));
-var $author$project$Input$Float$isValid = F2(
-	function (newValue, options) {
-		var updatedNumber = $elm$core$String$toFloat(newValue);
-		return !A2($author$project$Input$Float$exceedMaxValue, options.q, updatedNumber);
-	});
-var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
-	return {$: 2, a: a};
-};
-var $elm$html$Html$Events$preventDefaultOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
-	});
-var $author$project$Input$Float$onKeyDown = F2(
-	function (options, currentValue) {
-		var newValue = function (keyCode) {
-			return _Utils_ap(
-				A2(
-					$elm$core$Maybe$withDefault,
-					'',
-					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, currentValue)),
-				$elm$core$String$fromChar(
-					$elm$core$Char$fromCode(keyCode)));
-		};
-		var isNumber = function (keyCode) {
-			return ((keyCode >= 48) && (keyCode <= 57)) || (keyCode === 190);
-		};
-		var isNumPad = function (keyCode) {
-			return (keyCode >= 96) && (keyCode <= 105);
-		};
-		var filterKey = function (event) {
-			return (event.a4 || (event.a$ || event.bd)) ? _Utils_Tuple2(
-				options.g(currentValue),
-				false) : (event.bj ? _Utils_Tuple2(
-				options.g(currentValue),
-				false) : (A2(
-				$elm$core$List$any,
-				$elm$core$Basics$eq(event.bc),
-				$author$project$Input$KeyCode$allowedKeyCodes) ? _Utils_Tuple2(
-				options.g(currentValue),
-				false) : (((isNumber(event.bc) || isNumPad(event.bc)) && A2(
-				$author$project$Input$Float$isValid,
-				newValue(event.bc),
-				options)) ? _Utils_Tuple2(
-				options.g(
-					$elm$core$String$toFloat(
-						newValue(event.bc))),
-				false) : _Utils_Tuple2(
-				options.g(currentValue),
-				true))));
-		};
-		var decoder = A2($elm$json$Json$Decode$map, filterKey, $author$project$Input$Decoder$eventDecoder);
-		return A2($elm$html$Html$Events$preventDefaultOn, 'keydown', decoder);
-	});
-var $author$project$Input$Float$input = F3(
-	function (options, attributes, currentValue) {
-		var toArray = function (a) {
-			return _List_fromArray(
-				[a]);
-		};
-		var onFocusAttribute = A2(
-			$elm$core$Maybe$withDefault,
-			_List_Nil,
-			A2(
-				$elm$core$Maybe$map,
-				toArray,
-				A2(
-					$elm$core$Maybe$map,
-					$elm$html$Html$Events$onFocus,
-					A2(
-						$elm$core$Maybe$map,
-						function (f) {
-							return f(true);
-						},
-						options.u))));
-		var onBlurAttribute = A2(
-			$elm$core$Maybe$withDefault,
-			_List_Nil,
-			A2(
-				$elm$core$Maybe$map,
-				toArray,
-				A2(
-					$elm$core$Maybe$map,
-					$elm$html$Html$Events$onBlur,
-					A2(
-						$elm$core$Maybe$map,
-						function (f) {
-							return f(false);
-						},
-						options.u))));
-		var minAttribute = A2(
-			$elm$core$Maybe$withDefault,
-			_List_Nil,
-			A2(
-				$elm$core$Maybe$map,
-				toArray,
-				A2(
-					$elm$core$Maybe$map,
-					$elm$html$Html$Attributes$min,
-					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, options.w))));
-		var maxAttribute = A2(
-			$elm$core$Maybe$withDefault,
-			_List_Nil,
-			A2(
-				$elm$core$Maybe$map,
-				toArray,
-				A2(
-					$elm$core$Maybe$map,
-					$elm$html$Html$Attributes$max,
-					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, options.q))));
-		return A2(
-			$elm$html$Html$input,
-			A2(
-				$elm$core$List$append,
-				minAttribute,
-				A2(
-					$elm$core$List$append,
-					maxAttribute,
-					A2(
-						$elm$core$List$append,
-						onBlurAttribute,
-						A2(
-							$elm$core$List$append,
-							onFocusAttribute,
-							A2(
-								$elm$core$List$append,
-								attributes,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value(
-										A3(
-											$elm$core$String$replace,
-											'.',
-											',',
-											A2(
-												$elm$core$Maybe$withDefault,
-												'',
-												A2($elm$core$Maybe$map, $elm$core$String$fromFloat, currentValue)))),
-										A2($author$project$Input$Float$onKeyDown, options, currentValue),
-										$elm$html$Html$Events$onInput(
-										A2(
-											$elm$core$Basics$composeR,
-											A2($elm$core$String$replace, ',', '.'),
-											A2($elm$core$Basics$composeR, $elm$core$String$toFloat, options.g))),
-										$author$project$Input$Float$onChange(options),
-										$elm$html$Html$Attributes$type_('number')
-									])))))),
-			_List_Nil);
-	});
 var $author$project$MaximumInterestRateEditor$InputChanged = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
 	});
-var $author$project$Input$Float$defaultOptions = function (onInput) {
-	return {u: $elm$core$Maybe$Nothing, q: $elm$core$Maybe$Nothing, w: $elm$core$Maybe$Nothing, g: onInput};
-};
 var $author$project$MaximumInterestRateEditor$inputOptions = function (field) {
 	var defaultOptions = $author$project$Input$Float$defaultOptions(
 		$author$project$MaximumInterestRateEditor$InputChanged(field));
