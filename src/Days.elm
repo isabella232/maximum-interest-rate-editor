@@ -23,7 +23,7 @@ timeBetweenPayments starting_date =
         |> List.map (\end_date -> TE.diff Day utc starting_date end_date)
 
 
-buildPlanDays : List Int -> Int -> List Int
-buildPlanDays days installments_count =
+buildPlanDays : Int -> List Int -> List Int
+buildPlanDays installments_count days =
     days
         |> List.take (installments_count - 1)

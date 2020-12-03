@@ -1,0 +1,58 @@
+module Newton exposing (optimize)
+
+-- Gradient descent method (https://fr.wikipedia.org/wiki/M%C3%A9thode_de_Newton)
+-- Code extracted from SciPy (use `scipy.optimize.newton??` inside IPython), then simplified
+
+
+maxiter =
+    50
+
+
+abs_tol =
+    1.48e-8
+
+
+eps =
+    1.0e-4
+
+
+optimize : (Float -> Float) -> Maybe Float
+optimize f =
+    let
+        p0 =
+            0
+
+        p1 =
+            eps
+
+        q0 =
+            f p0
+
+        q1 =
+            f p1
+    in
+    optimizer f p0 p1 q0 q1 maxiter
+
+
+optimizer : (Float -> Float) -> Float -> Float -> Float -> Float -> Int -> Maybe Float
+optimizer f p0 p1 q0 q1 step =
+    if step == 0 then
+        Nothing
+
+    else if q1 == q0 then
+        Just <| (p1 + p0) / 2
+
+    else
+        let
+            p =
+                p1 - (p1 - p0) / (q1 - q0) * q1
+        in
+        if abs (p - p1) <= abs_tol then
+            Just p
+
+        else
+            let
+                q =
+                    f p
+            in
+            optimizer f p1 p q1 q (step - 1)

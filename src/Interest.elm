@@ -1,6 +1,7 @@
-module Interest exposing (show)
+module Interest exposing (annual_interest_rate, show)
 
 import Days
+import Newton
 import Quarter
 import Round
 
@@ -11,7 +12,8 @@ getPnxMaxBPS installments_count rate planDurations =
     -- 1 / n * (n - 1 - sum([1 / (1 + r) ** (t / 365) for t in plans]))
     let
         sum =
-            Days.buildPlanDays planDurations installments_count
+            planDurations
+                |> Days.buildPlanDays installments_count
                 |> List.map (\t -> 1 / (1 + rate / 100) ^ (toFloat t / 365))
                 |> List.sum
 
@@ -44,3 +46,39 @@ show installments_count maybe_rate publicationName =
 
         ( _, _ ) ->
             "-,-- %"
+
+
+annual_interest_rate : Float -> Float -> List Int -> String
+annual_interest_rate purchase_amount customer_fee planDurations =
+    if customer_fee < 0 then
+        "0,00"
+
+    else
+        let
+            customer_fees_rate =
+                (customer_fee / purchase_amount)
+                    |> Debug.log "fees"
+
+            n =
+                planDurations
+                    |> Debug.log "Durations"
+                    |> List.length
+                    |> (+) 1
+                    |> toFloat
+
+            f_sum x =
+                List.map (\d -> (1 / (1 + x)) ^ (toFloat d / 365)) planDurations
+                    |> List.sum
+
+            f =
+                \x -> 1 - n * (1 - customer_fees_rate) + f_sum x
+
+            maybe_taeg =
+                Newton.optimize f
+        in
+        case maybe_taeg of
+            Nothing ->
+                "-,--"
+
+            Just taeg ->
+                Round.round 2 (taeg * 100)
