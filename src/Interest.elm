@@ -56,12 +56,10 @@ annual_interest_rate purchase_amount customer_fee planDurations =
     else
         let
             customer_fees_rate =
-                (customer_fee / purchase_amount)
-                    |> Debug.log "fees"
+                customer_fee / purchase_amount
 
             n =
                 planDurations
-                    |> Debug.log "Durations"
                     |> List.length
                     |> (+) 1
                     |> toFloat
