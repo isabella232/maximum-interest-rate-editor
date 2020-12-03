@@ -81,4 +81,4 @@ annual_interest_rate purchase_amount customer_fee planDurations =
                 "-,--"
 
             Just taeg ->
-                Round.round 2 taeg
+                Round.round 2 (taeg * 100)
