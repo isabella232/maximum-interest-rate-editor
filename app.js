@@ -6819,6 +6819,13 @@ var $author$project$Newton$optimize = function (f) {
 	return A6($author$project$Newton$optimizer, f, p0, p1, q0, q1, $author$project$Newton$maxiter);
 };
 var $elm$core$Basics$pow = _Basics_pow;
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -7085,7 +7092,11 @@ var $author$project$Interest$annual_interest_rate = F3(
 				return '-,--';
 			} else {
 				var taeg = maybe_taeg.a;
-				return A2($myrho$elm_round$Round$round, 2, taeg * 100);
+				return A3(
+					$elm$core$String$replace,
+					'.',
+					',',
+					A2($myrho$elm_round$Round$round, 2, taeg * 100));
 			}
 		}
 	});
@@ -8276,13 +8287,6 @@ var $author$project$Input$Float$onKeyDown = F2(
 		};
 		var decoder = A2($elm$json$Json$Decode$map, filterKey, $author$project$Input$Decoder$eventDecoder);
 		return A2($elm$html$Html$Events$preventDefaultOn, 'keydown', decoder);
-	});
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
 	});
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
