@@ -164,10 +164,9 @@ input options attributes currentValue =
             [ currentValue
                 |> Maybe.map String.fromFloat
                 |> Maybe.withDefault ""
-                |> String.replace "." ","
                 |> value
             , onKeyDown options currentValue
-            , Html.Events.onInput (String.replace "," "." >> String.toFloat >> options.onInput)
+            , Html.Events.onInput (String.toFloat >> options.onInput)
             , onChange options
             , type_ "number"
             ]
@@ -304,7 +303,6 @@ onKeyDown options currentValue =
             keyCode
                 |> Char.fromCode
                 |> String.fromChar
-                |> String.replace "," "."
                 |> (++) (Maybe.withDefault "" <| Maybe.map String.fromFloat <| currentValue)
 
         isNumPad keyCode =
@@ -321,8 +319,6 @@ onKeyDown options currentValue =
             )
                 || keyCode
                 == 190
-                || keyCode
-                == 188
 
         filterKey =
             \event ->
