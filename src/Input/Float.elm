@@ -304,6 +304,7 @@ onKeyDown options currentValue =
             keyCode
                 |> Char.fromCode
                 |> String.fromChar
+                |> String.replace "," "."
                 |> (++) (Maybe.withDefault "" <| Maybe.map String.fromFloat <| currentValue)
 
         isNumPad keyCode =
@@ -320,6 +321,8 @@ onKeyDown options currentValue =
             )
                 || keyCode
                 == 190
+                || keyCode
+                == 188
 
         filterKey =
             \event ->
