@@ -15,12 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alma/wear-rate-editor.git"
+    "url": "git+https://github.com/alma/maximum-interest-rate-editor.git"
   },
   "bugs": {
-    "url": "https://github.com/alma/wear-rate-editor/issues"
+    "url": "https://github.com/alma/maximum-interest-rate-editor/issues"
   },
-  "homepage": "https://github.com/alma/wear-rate-editor#readme",
+  "homepage": "https://github.com/alma/maximum-interest-rate-editor#readme",
   "author": "Alma",
   "license": "ISC",
   "devDependencies": {
