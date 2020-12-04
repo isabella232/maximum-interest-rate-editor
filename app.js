@@ -8255,11 +8255,15 @@ var $author$project$Input$Float$onKeyDown = F2(
 					$elm$core$Maybe$withDefault,
 					'',
 					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, currentValue)),
-				$elm$core$String$fromChar(
-					$elm$core$Char$fromCode(keyCode)));
+				A3(
+					$elm$core$String$replace,
+					',',
+					'.',
+					$elm$core$String$fromChar(
+						$elm$core$Char$fromCode(keyCode))));
 		};
 		var isNumber = function (keyCode) {
-			return ((keyCode >= 48) && (keyCode <= 57)) || (keyCode === 190);
+			return ((keyCode >= 48) && (keyCode <= 57)) || ((keyCode === 190) || (keyCode === 188));
 		};
 		var isNumPad = function (keyCode) {
 			return (keyCode >= 96) && (keyCode <= 105);
