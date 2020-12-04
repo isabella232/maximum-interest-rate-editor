@@ -8248,7 +8248,7 @@ var $author$project$Input$Float$onKeyDown = F2(
 					$elm$core$Char$fromCode(keyCode)));
 		};
 		var isNumber = function (keyCode) {
-			return ((keyCode >= 48) && (keyCode <= 57)) || ((keyCode === 190) || (keyCode === 188));
+			return ((keyCode >= 48) && (keyCode <= 57)) || (keyCode === 190);
 		};
 		var isNumPad = function (keyCode) {
 			return (keyCode >= 96) && (keyCode <= 105);
