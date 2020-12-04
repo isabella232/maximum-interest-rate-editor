@@ -6819,13 +6819,6 @@ var $author$project$Newton$optimize = function (f) {
 	return A6($author$project$Newton$optimizer, f, p0, p1, q0, q1, $author$project$Newton$maxiter);
 };
 var $elm$core$Basics$pow = _Basics_pow;
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
-	});
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -7092,11 +7085,7 @@ var $author$project$Interest$annual_interest_rate = F3(
 				return '-,--';
 			} else {
 				var taeg = maybe_taeg.a;
-				return (taeg > 10) ? '-,--' : A3(
-					$elm$core$String$replace,
-					'.',
-					',',
-					A2($myrho$elm_round$Round$round, 2, taeg * 100));
+				return (taeg > 10) ? '-,--' : A2($myrho$elm_round$Round$round, 2, taeg * 100);
 			}
 		}
 	});
@@ -8255,12 +8244,8 @@ var $author$project$Input$Float$onKeyDown = F2(
 					$elm$core$Maybe$withDefault,
 					'',
 					A2($elm$core$Maybe$map, $elm$core$String$fromFloat, currentValue)),
-				A3(
-					$elm$core$String$replace,
-					',',
-					'.',
-					$elm$core$String$fromChar(
-						$elm$core$Char$fromCode(keyCode))));
+				$elm$core$String$fromChar(
+					$elm$core$Char$fromCode(keyCode)));
 		};
 		var isNumber = function (keyCode) {
 			return ((keyCode >= 48) && (keyCode <= 57)) || ((keyCode === 190) || (keyCode === 188));
@@ -8370,20 +8355,13 @@ var $author$project$Input$Float$input = F3(
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$value(
-										A3(
-											$elm$core$String$replace,
-											'.',
-											',',
-											A2(
-												$elm$core$Maybe$withDefault,
-												'',
-												A2($elm$core$Maybe$map, $elm$core$String$fromFloat, currentValue)))),
+										A2(
+											$elm$core$Maybe$withDefault,
+											'',
+											A2($elm$core$Maybe$map, $elm$core$String$fromFloat, currentValue))),
 										A2($author$project$Input$Float$onKeyDown, options, currentValue),
 										$elm$html$Html$Events$onInput(
-										A2(
-											$elm$core$Basics$composeR,
-											A2($elm$core$String$replace, ',', '.'),
-											A2($elm$core$Basics$composeR, $elm$core$String$toFloat, options.g))),
+										A2($elm$core$Basics$composeR, $elm$core$String$toFloat, options.g)),
 										$author$project$Input$Float$onChange(options),
 										$elm$html$Html$Attributes$type_('number')
 									])))))),
