@@ -6,7 +6,7 @@ import Quarter
 import Round
 
 
-getPnxMaxBPS : Int -> Float -> List Int -> String
+getPnxMaxBPS : Int -> Int -> List Int -> String
 getPnxMaxBPS installments_count rate planDurations =
     -- n = len(plans) + 1
     -- 1 / n * (n - 1 - sum([1 / (1 + r) ** (t / 365) for t in plans]))
@@ -14,7 +14,7 @@ getPnxMaxBPS installments_count rate planDurations =
         sum =
             planDurations
                 |> Days.buildPlanDays installments_count
-                |> List.map (\t -> 1 / (1 + rate / 100) ^ (toFloat t / 365))
+                |> List.map (\t -> 1 / (1 + toFloat rate / 10000) ^ (toFloat t / 365))
                 |> List.sum
 
         rounded_value =
@@ -24,7 +24,7 @@ getPnxMaxBPS installments_count rate planDurations =
     rounded_value
 
 
-show : Int -> Maybe Float -> String -> String
+show : Int -> Maybe Int -> String -> String
 show installments_count maybe_rate publicationName =
     let
         maybe_quarter =
@@ -42,10 +42,10 @@ show installments_count maybe_rate publicationName =
             in
             rounded_value
                 |> Maybe.map (\bps -> bps ++ " bps")
-                |> Maybe.withDefault "-,-- %"
+                |> Maybe.withDefault "--- bps"
 
         ( _, _ ) ->
-            "-,-- %"
+            "--- bps"
 
 
 annual_interest_rate : Float -> Float -> List Int -> String

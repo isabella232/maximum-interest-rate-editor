@@ -27,11 +27,11 @@ type FieldType
 
 
 type alias FieldInfo =
-    Maybe Float
+    Maybe Int
 
 
 type Msg
-    = InputChanged FieldType (Maybe Float)
+    = InputChanged FieldType String
     | ReceiveDate Date
     | SetPublicationName String
 
@@ -49,12 +49,26 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { publicationName = ""
-      , below3000 = Just 21.16
-      , over3000 = Just 9.97
-      , over6000 = Just 5.07
+      , below3000 = Just 2116
+      , over3000 = Just 997
+      , over6000 = Just 507
       }
     , Date.today |> Task.perform ReceiveDate
     )
+
+
+validateInputRate : String -> Maybe Int
+validateInputRate maybe_rate =
+    maybe_rate
+        |> String.toInt
+        |> Maybe.andThen
+            (\rate ->
+                if rate > 0 && rate < 10000 then
+                    Just rate
+
+                else
+                    Nothing
+            )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -67,25 +81,13 @@ update msg model =
             ( { model | publicationName = value }, Cmd.none )
 
         InputChanged Below3000 value ->
-            ( { model | below3000 = value }, Cmd.none )
+            ( { model | below3000 = validateInputRate value }, Cmd.none )
 
         InputChanged Over3000 value ->
-            ( { model | over3000 = value }, Cmd.none )
+            ( { model | over3000 = validateInputRate value }, Cmd.none )
 
         InputChanged Over6000 value ->
-            ( { model | over6000 = value }, Cmd.none )
-
-
-inputOptions : FieldType -> MaskedPercentage.Options Msg
-inputOptions field =
-    let
-        defaultOptions =
-            MaskedPercentage.defaultOptions (InputChanged field)
-    in
-    { defaultOptions
-        | maxValue = Just 100
-        , minValue = Just 0
-    }
+            ( { model | over6000 = validateInputRate value }, Cmd.none )
 
 
 publicationNameFromDate : Date -> String
@@ -103,18 +105,21 @@ publicationNameFromDate value =
 percentageInput : FieldType -> FieldInfo -> String -> List (Html Msg)
 percentageInput field fieldInfo formName =
     [ div [ class "input-group" ]
-        [ MaskedPercentage.input
-            (inputOptions field)
-            [ class "form-control", id formName ]
-            fieldInfo
-        , span [ class "input-group-addon" ] [ text "%" ]
+        [ input
+            [ class "form-control"
+            , onInput <| InputChanged field
+            , id formName
+            , value <| String.fromInt <| Maybe.withDefault 0 fieldInfo
+            ]
+            []
+        , span [ class "input-group-addon" ] [ text "bps" ]
         ]
     , case fieldInfo of
         Just rate ->
             input
                 [ type_ "hidden"
                 , formName ++ "_rate" |> name
-                , rate * 100 |> Round.floor 0 |> value
+                , rate |> String.fromInt |> value
                 ]
                 []
 
