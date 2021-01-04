@@ -49,9 +49,9 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { publicationName = ""
-      , below3000 = Just 20.83
-      , over3000 = Just 10.16
-      , over6000 = Just 5.19
+      , below3000 = Just 21.16
+      , over3000 = Just 9.97
+      , over6000 = Just 5.07
       }
     , Date.today |> Task.perform ReceiveDate
     )

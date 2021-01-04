@@ -319,6 +319,8 @@ onKeyDown options currentValue =
             )
                 || keyCode
                 == 190
+                || keyCode
+                == 188
 
         filterKey =
             \event ->
