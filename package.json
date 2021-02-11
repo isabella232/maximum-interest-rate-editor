@@ -5,7 +5,7 @@
   "scripts": {
     "analyse": "elm-analyse",
     "build": "npm run cleanup && npm run copy-assets && elm make src/MaximumInterestRateEditor.elm --output=build/app.js --optimize && uglifyjs build/app.js --compress 'pure_funcs=\"F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9\",pure_getters,keep_fargs=false,unsafe_comps,unsafe' | uglifyjs --mangle --output build/app.min.js && mv build/app.min.js build/app.js",
-    "build-with-taeg": "npm run cleanup && npm run copy-assets && elm make src/MaximumInterestRateEditor.elm src/TAEG.elm --output=build/app.js --optimize",
+    "build-with-taeg": "npm run cleanup && npm run copy-assets && elm make src/MaximumInterestRateEditor.elm src/TAEG.elm --output=build/app.js --optimize && uglifyjs build/app.js --compress 'pure_funcs=\"F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9\",pure_getters,keep_fargs=false,unsafe_comps,unsafe' | uglifyjs --mangle --output build/app.min.js && mv build/app.min.js build/app.js",
     "copy-assets": "rimraf build && mkdir build && cp -r public/* build",
     "cleanup": "rimraf elm-stuff/",
     "debug": "elm-live src/MaximumInterestRateEditor.elm src/TAEG.elm --port=3000 --dir=public/ -- --output=public/app.js --debug",
