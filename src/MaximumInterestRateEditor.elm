@@ -12,6 +12,13 @@ import Task
 import Time exposing (Month(..))
 
 
+type alias Flags =
+    { below_3000 : Int
+    , over_3000 : Int
+    , over_6000 : Int
+    }
+
+
 type alias Model =
     { publicationName : String
     , below3000 : FieldInfo
@@ -36,7 +43,7 @@ type Msg
     | SetPublicationName String
 
 
-main : Program () Model Msg
+main : Program Flags Model Msg
 main =
     Browser.element
         { init = init
@@ -46,12 +53,12 @@ main =
         }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     ( { publicationName = ""
-      , below3000 = Just 2116
-      , over3000 = Just 997
-      , over6000 = Just 507
+      , below3000 = Just flags.below_3000
+      , over3000 = Just flags.over_3000
+      , over6000 = Just flags.over_6000
       }
     , Date.today |> Task.perform ReceiveDate
     )

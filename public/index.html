@@ -47,7 +47,11 @@
     const element = document.getElementById("app");
     const app = Elm.MaximumInterestRateEditor.init({
       node: element,
-      flags: {}
+      flags: {
+        "below_3000": 2109,
+        "over_3000": 983,
+        "over_6000": 508,
+      }
     });
     const taeg_element = document.getElementById("taeg-app");
     const taeg_app = Elm.TAEG.init({
