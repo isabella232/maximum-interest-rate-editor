@@ -1,13 +1,15 @@
 module Interest exposing (annual_interest_rate, show)
 
-import Days
+import Days exposing (timeBetweenPayments)
 import Newton
 import Quarter
 import Round
 
+
 rateWithinDays : Int -> Int -> Float
 rateWithinDays rate deltaI =
-    (1 + toFloat rate / 10000) ^ (toFloat deltaI / 365 - 1)
+    (1 + toFloat rate / 10000) ^ (toFloat deltaI / 365) - 1
+
 
 getPnxMaxBPS : Int -> Int -> List Int -> String
 getPnxMaxBPS installments_count rate planDurations =
@@ -26,38 +28,60 @@ getPnxMaxBPS installments_count rate planDurations =
     in
     rounded_value
 
+
 alpha : Int -> List Int -> Float
 alpha rate planDuration =
     case planDuration |> List.reverse of
-       [] -> 1.0
-       deltaI :: remainingDuration -> ((rateWithinDays rate deltaI) + 1) * (alpha rate <| List.reverse remainingDuration) + 1
+        [] ->
+            1.0
+
+        deltaI :: remainingDuration ->
+            (rateWithinDays rate deltaI + 1) * (alpha rate <| List.reverse remainingDuration) + 1
+
 
 beta : Int -> List Int -> Float
 beta rate planDuration =
     case planDuration |> List.reverse of
-       [] -> 0.0
-       deltaI :: remainingDuration ->
+        [] ->
+            0.0
+
+        deltaI :: remainingDuration ->
             let
-                monthlyRate = rateWithinDays rate deltaI
+                monthlyRate =
+                    rateWithinDays rate deltaI
             in
             (monthlyRate + 1) * (beta rate <| List.reverse remainingDuration) - monthlyRate
 
+
 installmentAmount : Int -> List Int -> Float
 installmentAmount rate planDuration =
-    (1 - beta rate planDuration) / (alpha rate planDuration)
+    (1 - beta rate planDuration) / alpha rate planDuration
+
 
 getCreditMaxBPS : Int -> Int -> List Int -> String
 getCreditMaxBPS installments_count rate planDurations =
     let
-        maxBPS = toFloat installments_count * (installmentAmount rate planDurations) - 1
+        timeBetweenPayments =
+            planDurations
+                |> Days.buildPlanDays installments_count
+                |> List.foldl
+                    (\nbDaysFromStartDate acc -> nbDaysFromStartDate - List.sum acc :: acc)
+                    []
+
+        maxBPS =
+            toFloat installments_count * installmentAmount rate timeBetweenPayments - 1
     in
     Round.floor 0 (maxBPS * 10000)
 
 
 getMaxBPS : Int -> Int -> List Int -> String
 getMaxBPS installments_count =
-    if installments_count > 4 then getCreditMaxBPS installments_count
-    else getPnxMaxBPS installments_count
+    if installments_count > 4 then
+        getCreditMaxBPS installments_count
+
+    else
+        getPnxMaxBPS installments_count
+
 
 show : Int -> Maybe Int -> String -> String
 show installments_count maybe_rate publicationName =
