@@ -8,7 +8,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Input.Float as CurrencyInput
 import Interest
-import Round
 import Task
 import Time exposing (Month(..))
 import Utils exposing (euros)
@@ -19,15 +18,7 @@ type alias Model =
     , startDate : Maybe String
     , installmentsCount : Maybe Int
     , paidAmount : Maybe Float
-    , paymentPlan : List Installment
-    }
-
-
-type alias Installment =
-    { dueDate : String
-    , totalAmount : Int
-    , purchaseAmount : Int
-    , customerInterest : Int
+    , paymentPlan : List Days.Installment
     }
 
 
@@ -67,21 +58,36 @@ init _ =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        ReceiveDate today ->
-            ( { model | startDate = Date.toIsoString today |> Just }, Cmd.none )
+    let
+        newModel =
+            case msg of
+                ReceiveDate today ->
+                    { model | startDate = Date.toIsoString today |> Just }
 
-        DateChanged value ->
-            ( { model | startDate = Just value }, Cmd.none )
+                DateChanged value ->
+                    { model | startDate = Just value }
 
-        CurrencyChanged PurchaseAmount value ->
-            ( { model | purchaseAmount = value }, Cmd.none )
+                CurrencyChanged PurchaseAmount value ->
+                    { model | purchaseAmount = value }
 
-        InstallmentsCountChanged value ->
-            ( { model | installmentsCount = String.toInt value }, Cmd.none )
+                InstallmentsCountChanged value ->
+                    { model | installmentsCount = String.toInt value }
 
-        CurrencyChanged PaidAmount value ->
-            ( { model | paidAmount = value }, Cmd.none )
+                CurrencyChanged PaidAmount value ->
+                    { model | paidAmount = value }
+    in
+    ( { newModel | paymentPlan = updatePaymentPlan newModel }, Cmd.none )
+
+
+updatePaymentPlan model =
+    case
+        ( ( model.purchaseAmount, model.startDate ), ( model.installmentsCount, model.paidAmount ) )
+    of
+        ( ( Just purchaseAmount, Just startDate ), ( Just installmentsCount, Just paidAmount ) ) ->
+            Days.getPNXPaymentPlan installmentsCount startDate (round purchaseAmount * 100) (round ((paidAmount - purchaseAmount) * 100))
+
+        _ ->
+            []
 
 
 annual_interest_rate : Maybe String -> Maybe Float -> Maybe Int -> Maybe Float -> String
@@ -126,7 +132,7 @@ currencyInput field fieldInfo formName =
         ]
 
 
-viewInstallment : Int -> Installment -> Html Msg
+viewInstallment : Int -> Days.Installment -> Html Msg
 viewInstallment i installment =
     tr [ class "" ]
         [ td []
@@ -142,7 +148,7 @@ viewInstallment i installment =
         ]
 
 
-viewPaymentPlan : List Installment -> Html Msg
+viewPaymentPlan : List Days.Installment -> Html Msg
 viewPaymentPlan paymentPlan =
     case paymentPlan of
         [] ->
