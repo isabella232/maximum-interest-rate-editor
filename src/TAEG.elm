@@ -11,6 +11,7 @@ import Interest
 import Round
 import Task
 import Time exposing (Month(..))
+import Utils exposing (euros)
 
 
 type alias Model =
@@ -18,6 +19,15 @@ type alias Model =
     , startDate : Maybe String
     , installmentsCount : Maybe Int
     , paidAmount : Maybe Float
+    , paymentPlan : List Installment
+    }
+
+
+type alias Installment =
+    { dueDate : String
+    , totalAmount : Int
+    , purchaseAmount : Int
+    , customerInterest : Int
     }
 
 
@@ -49,6 +59,7 @@ init _ =
       , startDate = Nothing
       , installmentsCount = Just 3
       , paidAmount = Just 101.55
+      , paymentPlan = []
       }
     , Date.today |> Task.perform ReceiveDate
     )
@@ -115,8 +126,50 @@ currencyInput field fieldInfo formName =
         ]
 
 
+viewInstallment : Int -> Installment -> Html Msg
+viewInstallment i installment =
+    tr [ class "" ]
+        [ td []
+            [ text <| "E" ++ String.fromInt (i + 1) ]
+        , td []
+            [ text installment.dueDate ]
+        , td []
+            [ text <| euros installment.totalAmount ]
+        , td []
+            [ text <| euros installment.purchaseAmount ]
+        , td []
+            [ text <| euros installment.customerInterest ]
+        ]
+
+
+viewPaymentPlan : List Installment -> Html Msg
+viewPaymentPlan paymentPlan =
+    case paymentPlan of
+        [] ->
+            text ""
+
+        _ ->
+            table [ class "table table-condensed" ]
+                [ thead []
+                    [ tr []
+                        [ th []
+                            [ text "#" ]
+                        , th []
+                            [ text "Date" ]
+                        , th []
+                            [ text "Montant" ]
+                        , th []
+                            [ text "Capital" ]
+                        , th []
+                            [ text "Intérêts" ]
+                        ]
+                    ]
+                , List.indexedMap viewInstallment paymentPlan |> tbody []
+                ]
+
+
 view : Model -> Html Msg
-view { startDate, purchaseAmount, installmentsCount, paidAmount } =
+view { startDate, purchaseAmount, installmentsCount, paidAmount, paymentPlan } =
     div []
         [ div [ class "col-sm-6" ]
             [ div [ class "form-group col-sm-6" ]
@@ -169,5 +222,8 @@ view { startDate, purchaseAmount, installmentsCount, paidAmount } =
                     , text "%"
                     ]
                 ]
+            ]
+        , div [ class "col-sm-6" ]
+            [ viewPaymentPlan paymentPlan
             ]
         ]
