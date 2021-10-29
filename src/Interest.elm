@@ -7,8 +7,8 @@ import Round
 
 
 rateWithinDays : Int -> Int -> Float
-rateWithinDays rate deltaI =
-    (1 + toFloat rate / 10000) ^ (toFloat deltaI / 365) - 1
+rateWithinDays rate days =
+    (1 + toFloat rate / 10000) ^ (toFloat days / 365) - 1
 
 
 getPnxMaxBPS : Int -> Int -> List Int -> String
@@ -35,8 +35,8 @@ alpha rate planDuration =
         [] ->
             1.0
 
-        deltaI :: remainingDuration ->
-            (rateWithinDays rate deltaI + 1) * (alpha rate <| List.reverse remainingDuration) + 1
+        days :: remainingDuration ->
+            (rateWithinDays rate days + 1) * (alpha rate <| List.reverse remainingDuration) + 1
 
 
 beta : Int -> List Int -> Float
@@ -45,10 +45,10 @@ beta rate planDuration =
         [] ->
             0.0
 
-        deltaI :: remainingDuration ->
+        days :: remainingDuration ->
             let
                 monthlyRate =
-                    rateWithinDays rate deltaI
+                    rateWithinDays rate days
             in
             (monthlyRate + 1) * (beta rate <| List.reverse remainingDuration) - monthlyRate
 
@@ -61,15 +61,14 @@ installmentAmount rate planDuration =
 getCreditMaxBPS : Int -> Int -> List Int -> String
 getCreditMaxBPS installments_count rate planDurations =
     let
-        timeBetweenPayments =
+        daysBetweenPayments =
             planDurations
                 |> Days.buildPlanDays installments_count
-                |> List.foldl
-                    (\nbDaysFromStartDate acc -> nbDaysFromStartDate - List.sum acc :: acc)
-                    []
+                |> List.foldl (\nbDaysFromStartDate acc -> nbDaysFromStartDate - List.sum acc :: acc) []
+                |> List.reverse
 
         maxBPS =
-            toFloat installments_count * installmentAmount rate timeBetweenPayments - 1
+            toFloat installments_count * installmentAmount rate daysBetweenPayments - 1
     in
     Round.floor 0 (maxBPS * 10000)
 
