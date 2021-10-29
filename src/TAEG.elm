@@ -84,7 +84,11 @@ updatePaymentPlan model =
         ( ( model.purchaseAmount, model.startDate ), ( model.installmentsCount, model.paidAmount ) )
     of
         ( ( Just purchaseAmount, Just startDate ), ( Just installmentsCount, Just paidAmount ) ) ->
-            Days.getPNXPaymentPlan installmentsCount startDate (round purchaseAmount * 100) (round ((paidAmount - purchaseAmount) * 100))
+            Days.getPNXPaymentPlan
+                installmentsCount
+                startDate
+                (round purchaseAmount * 100)
+                (round ((paidAmount - purchaseAmount) * 100))
 
         _ ->
             []
@@ -155,6 +159,14 @@ viewPaymentPlan paymentPlan =
             text ""
 
         _ ->
+            let
+                feeTitle =
+                    if List.length paymentPlan > 4 then
+                        "Intérêts"
+
+                    else
+                        "Frais client"
+            in
             table [ class "table table-condensed" ]
                 [ thead []
                     [ tr []
@@ -167,7 +179,7 @@ viewPaymentPlan paymentPlan =
                         , th []
                             [ text "Capital" ]
                         , th []
-                            [ text "Intérêts" ]
+                            [ text feeTitle ]
                         ]
                     ]
                 , List.indexedMap viewInstallment paymentPlan |> tbody []

@@ -84,6 +84,12 @@ getPNXPaymentPlan installmentsCount startingDate purchaseAmount customerFee =
 
                 x :: xs ->
                     (x + customerFee) :: xs
+
+        customerFeePhasing =
+            customerFee :: List.repeat (installmentsCount - 1) 0
     in
-    -- List.map3 (\dueDate purchaseAmount totalAmount -> { dueDate = toString dueDate, totalAmount = totalAmount, purchaseAmount = purchaseAmount, customerInterest = 0 }) dates purchaseAmountPhasing totalAmountPhasing
-    List.map4 Installment dates totalAmountPhasing purchaseAmountPhasing <| List.repeat installmentsCount 0
+    List.map4 Installment
+        dates
+        totalAmountPhasing
+        purchaseAmountPhasing
+        customerFeePhasing
