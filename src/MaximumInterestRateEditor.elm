@@ -183,6 +183,7 @@ view model =
             [ showTableFor 2 model
             , showTableFor 3 model
             , showTableFor 4 model
+            , showTableFor 6 model
             , showTableFor 10 model
             ]
         ]
