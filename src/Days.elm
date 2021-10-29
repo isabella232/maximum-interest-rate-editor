@@ -52,10 +52,10 @@ buildPlanDays installments_count days =
 getPurchaseAmountPhasing installmentsCount purchaseAmount =
     let
         n =
-            toFloat installmentsCount |> Debug.log "n"
+            toFloat installmentsCount
 
         amount =
-            toFloat purchaseAmount |> Debug.log "amount"
+            toFloat purchaseAmount
 
         alpha =
             1 / n
