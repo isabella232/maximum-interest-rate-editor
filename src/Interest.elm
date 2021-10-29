@@ -1,14 +1,16 @@
-module Interest exposing (annual_interest_rate, show)
+module Interest exposing (getCreditPaymentPlan, optimal_interest_rate, show)
 
-import Days exposing (timeBetweenPayments)
+import Days exposing (Installment, timeBetweenPayments)
 import Newton
 import Quarter
 import Round
+import Time exposing (utc)
+import Time.Extra as TE exposing (Interval(..))
 
 
-rateWithinDays : Int -> Int -> Float
+rateWithinDays : Float -> Int -> Float
 rateWithinDays rate days =
-    (1 + toFloat rate / 10000) ^ (toFloat days / 365) - 1
+    (1 + rate) ^ (toFloat days / 365) - 1
 
 
 getPnxMaxBPS : Int -> Int -> List Int -> String
@@ -36,7 +38,7 @@ alpha rate planDuration =
             1.0
 
         days :: remainingDuration ->
-            (rateWithinDays rate days + 1) * (alpha rate <| List.reverse remainingDuration) + 1
+            (rateWithinDays (toFloat rate / 10000) days + 1) * (alpha rate <| List.reverse remainingDuration) + 1
 
 
 beta : Int -> List Int -> Float
@@ -48,7 +50,7 @@ beta rate planDuration =
         days :: remainingDuration ->
             let
                 monthlyRate =
-                    rateWithinDays rate days
+                    rateWithinDays (toFloat rate / 10000) days
             in
             (monthlyRate + 1) * (beta rate <| List.reverse remainingDuration) - monthlyRate
 
@@ -106,39 +108,116 @@ show installments_count maybe_rate publicationName =
             "--- bps"
 
 
-annual_interest_rate : Float -> Float -> List Int -> String
-annual_interest_rate purchase_amount customer_fee planDurations =
-    if customer_fee < 0 then
-        "0,00"
+optimal_interest_rate : Int -> List Installment -> Maybe Float
+optimal_interest_rate purchaseAmount paymentPlan =
+    case paymentPlan of
+        [] ->
+            Nothing
 
-    else
-        let
-            customer_fees_rate =
-                customer_fee / purchase_amount
+        firstInstallment :: xs ->
+            let
+                startDate =
+                    firstInstallment.dueDate
+                        |> Days.toPosix
+                        |> TE.add Day 3 utc
 
-            n =
-                planDurations
-                    |> List.length
-                    |> (+) 1
-                    |> toFloat
+                planDurations =
+                    startDate
+                        |> Days.timeBetweenPayments
+                        |> Days.buildPlanDays (List.length paymentPlan)
+                        |> Debug.log "planDuration"
 
-            f_sum x =
-                List.map (\d -> (1 / (1 + x)) ^ (toFloat d / 365)) planDurations
-                    |> List.sum
+                loanAmount =
+                    purchaseAmount - firstInstallment.purchaseAmount
 
-            f =
-                \x -> 1 - n * (1 - customer_fees_rate) + f_sum x
+                f_sum x =
+                    List.map2 (\d installment -> toFloat installment.totalAmount * (1 / (1 + x)) ^ (toFloat d / 365)) planDurations xs
+                        |> List.sum
 
-            maybe_taeg =
-                Newton.optimize f
-        in
-        case maybe_taeg of
-            Nothing ->
-                "-,--"
+                f x =
+                    toFloat purchaseAmount - f_sum x
 
-            Just taeg ->
-                if taeg > 10 then
-                    "-,--"
+                maybe_taeg =
+                    Newton.optimize f
+                        |> Debug.log "optimize"
+            in
+            maybe_taeg
+                |> Maybe.andThen
+                    (\taeg ->
+                        if taeg > 10 || taeg < 0 then
+                            Nothing
 
-                else
-                    Round.round 2 (taeg * 100)
+                        else
+                            Just taeg
+                    )
+
+
+getCreditPaymentPlan : Int -> String -> Int -> Int -> List Installment
+getCreditPaymentPlan installmentsCount startingDate purchaseAmount customerFee =
+    let
+        dates =
+            List.map Days.toString <| Days.schedulePaymentDates installmentsCount (Days.toPosix startingDate)
+
+        totalAmountPhasing =
+            Days.getPurchaseAmountPhasing installmentsCount (purchaseAmount + customerFee)
+
+        customerFeePhasing =
+            List.repeat installmentsCount 0
+
+        daysBetweenPayments =
+            startingDate
+                |> Days.toPosix
+                |> Days.timeBetweenPayments
+                |> Days.buildPlanDays installmentsCount
+                |> List.foldl (\nbDaysFromStartDate acc -> nbDaysFromStartDate - List.sum acc :: acc) []
+                |> List.reverse
+
+        maybe_taeg =
+            List.map4 Installment
+                dates
+                totalAmountPhasing
+                totalAmountPhasing
+                customerFeePhasing
+                |> optimal_interest_rate purchaseAmount
+                |> Debug.log "maybe taeg"
+    in
+    case maybe_taeg of
+        Nothing ->
+            []
+
+        Just taeg ->
+            let
+                ( _, purchaseAmountPhasing, interestPhasing ) =
+                    List.map2 Tuple.pair totalAmountPhasing (0 :: daysBetweenPayments)
+                        |> List.foldl
+                            (\( totalAmount, days ) ( capitalLeftToPay, purchaseAcc, interestAcc ) ->
+                                let
+                                    monthlyRate =
+                                        rateWithinDays taeg days
+                                            |> Debug.log "monthyRate"
+
+                                    _ =
+                                        Debug.log "days" days
+
+                                    interest =
+                                        if days == 0 then
+                                            0
+
+                                        else
+                                            (capitalLeftToPay * monthlyRate)
+                                                |> round
+                                                |> Debug.log "interest"
+
+                                    amount =
+                                        (totalAmount - interest)
+                                            |> Debug.log "amount"
+                                in
+                                ( capitalLeftToPay - toFloat amount, amount :: purchaseAcc, interest :: interestAcc )
+                            )
+                            ( toFloat purchaseAmount, [], [] )
+            in
+            List.map4 Installment
+                dates
+                totalAmountPhasing
+                (purchaseAmountPhasing |> List.reverse)
+                (interestPhasing |> List.reverse)

@@ -8,6 +8,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Input.Float as CurrencyInput
 import Interest
+import Round
 import Task
 import Time exposing (Month(..))
 import Utils exposing (euros)
@@ -46,10 +47,10 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { purchaseAmount = Just 100
+    ( { purchaseAmount = Just 515.5
       , startDate = Nothing
-      , installmentsCount = Just 3
-      , paidAmount = Just 101.55
+      , installmentsCount = Just 10
+      , paidAmount = Just 546.03
       , paymentPlan = []
       }
     , Date.today |> Task.perform ReceiveDate
@@ -84,7 +85,15 @@ updatePaymentPlan model =
         ( ( model.purchaseAmount, model.startDate ), ( model.installmentsCount, model.paidAmount ) )
     of
         ( ( Just purchaseAmount, Just startDate ), ( Just installmentsCount, Just paidAmount ) ) ->
-            Days.getPNXPaymentPlan
+            let
+                paymentPlanBuilder =
+                    if installmentsCount > 4 then
+                        Interest.getCreditPaymentPlan
+
+                    else
+                        Days.getPNXPaymentPlan
+            in
+            paymentPlanBuilder
                 installmentsCount
                 startDate
                 (round purchaseAmount * 100)
@@ -94,23 +103,21 @@ updatePaymentPlan model =
             []
 
 
-annual_interest_rate : Maybe String -> Maybe Float -> Maybe Int -> Maybe Float -> String
-annual_interest_rate maybe_startDate maybe_purchaseAmount maybe_installmentsCount maybe_paidAmount =
-    case ( ( maybe_startDate, maybe_purchaseAmount ), ( maybe_installmentsCount, maybe_paidAmount ) ) of
-        ( ( Just startDate, Just purchaseAmount ), ( Just installmentsCount, Just paidAmount ) ) ->
-            let
-                customerFees =
-                    paidAmount - purchaseAmount
+annual_interest_rate : Maybe Float -> List Days.Installment -> String
+annual_interest_rate maybe_purchaseAmount paymentPlan =
+    let
+        maybe_taeg =
+            maybe_purchaseAmount
+                |> Maybe.andThen
+                    (\purchaseAmount ->
+                        Interest.optimal_interest_rate (round purchaseAmount * 100) paymentPlan
+                    )
+    in
+    case maybe_taeg of
+        Just taeg ->
+            Round.round 2 (taeg * 100)
 
-                planDurations =
-                    startDate
-                        |> Days.toPosix
-                        |> Days.timeBetweenPayments
-                        |> Days.buildPlanDays installmentsCount
-            in
-            Interest.annual_interest_rate purchaseAmount customerFees planDurations
-
-        _ ->
+        Nothing ->
             "-,--"
 
 
@@ -236,7 +243,7 @@ view { startDate, purchaseAmount, installmentsCount, paidAmount, paymentPlan } =
             [ p []
                 [ h1 [ class "text-center" ]
                     [ text "Votre TAEG pour ce paiement est de "
-                    , text <| annual_interest_rate startDate purchaseAmount installmentsCount paidAmount
+                    , text <| annual_interest_rate purchaseAmount paymentPlan
                     , text "%"
                     ]
                 ]

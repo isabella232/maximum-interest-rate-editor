@@ -1,4 +1,4 @@
-module Days exposing (Installment, buildPlanDays, getPNXPaymentPlan, timeBetweenPayments, toPosix)
+module Days exposing (Installment, buildPlanDays, getPNXPaymentPlan, getPurchaseAmountPhasing, schedulePaymentDates, timeBetweenPayments, toPosix, toString)
 
 import Date
 import Iso8601
@@ -45,8 +45,21 @@ timeBetweenPayments starting_date =
 
 buildPlanDays : Int -> List Int -> List Int
 buildPlanDays installments_count days =
-    days
-        |> List.take (installments_count - 1)
+    let
+        durations =
+            days
+                |> List.take (installments_count - 1)
+    in
+    case durations of
+        [] ->
+            []
+
+        x :: xs ->
+            if installments_count > 4 then
+                x - 3 :: xs
+
+            else
+                durations
 
 
 getPurchaseAmountPhasing installmentsCount purchaseAmount =
