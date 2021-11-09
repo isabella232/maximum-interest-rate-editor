@@ -4,8 +4,6 @@ import Days exposing (Installment, timeBetweenPayments)
 import Newton
 import Quarter
 import Round
-import Time exposing (utc)
-import Time.Extra as TE exposing (Interval(..))
 
 
 rateWithinDays : Float -> Int -> Float

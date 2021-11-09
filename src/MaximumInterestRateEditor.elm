@@ -5,9 +5,7 @@ import Date exposing (Date)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Input.Float as MaskedPercentage
 import Interest
-import Round
 import Task
 import Time exposing (Month(..))
 

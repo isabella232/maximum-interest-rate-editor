@@ -80,6 +80,7 @@ update msg model =
     ( { newModel | paymentPlan = updatePaymentPlan newModel }, Cmd.none )
 
 
+updatePaymentPlan : Model -> List Days.Installment
 updatePaymentPlan model =
     case
         ( ( model.purchaseAmount, model.startDate ), ( model.installmentsCount, model.paidAmount ) )

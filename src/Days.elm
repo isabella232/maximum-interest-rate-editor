@@ -57,6 +57,7 @@ buildPlanDays installments_count days =
         durations
 
 
+getPurchaseAmountPhasing : Int -> Int -> List Int
 getPurchaseAmountPhasing installmentsCount purchaseAmount =
     let
         n =
@@ -77,6 +78,7 @@ getPurchaseAmountPhasing installmentsCount purchaseAmount =
     first :: List.repeat (installmentsCount - 1) after
 
 
+getPNXPaymentPlan : Int -> String -> Int -> Int -> List Installment
 getPNXPaymentPlan installmentsCount startingDate purchaseAmount customerFee =
     let
         dates =

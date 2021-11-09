@@ -1,4 +1,4 @@
-module Utils exposing (..)
+module Utils exposing (euros)
 
 import Round
 
