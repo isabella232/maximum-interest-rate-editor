@@ -212,7 +212,7 @@ view { bps, installmentsCount, minPaymentPlan, maxPaymentPlan } =
     div [ class "row" ]
         [ div [ class "col-sm-12" ]
             [ div [ class "form-group col-sm-6" ]
-                [ label [ for "bps", class "col-sm-6 control-label" ] [ text "Nombre d'échéances" ]
+                [ label [ for "bps", class "col-sm-6 control-label" ] [ text "Frais clients bps" ]
                 , div [ class "col-sm-6" ]
                     [ div [ class "input-group" ]
                         [ input
