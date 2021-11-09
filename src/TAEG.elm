@@ -11,6 +11,7 @@ import Interest
 import Round
 import Task
 import Time exposing (Month(..))
+import Utils exposing (euros)
 
 
 type alias Model =
@@ -18,6 +19,7 @@ type alias Model =
     , startDate : Maybe String
     , installmentsCount : Maybe Int
     , paidAmount : Maybe Float
+    , paymentPlan : List Days.Installment
     }
 
 
@@ -45,10 +47,11 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { purchaseAmount = Just 100
+    ( { purchaseAmount = Just 515.5
       , startDate = Nothing
-      , installmentsCount = Just 3
-      , paidAmount = Just 101.55
+      , installmentsCount = Just 10
+      , paidAmount = Just 546.03
+      , paymentPlan = []
       }
     , Date.today |> Task.perform ReceiveDate
     )
@@ -56,40 +59,66 @@ init _ =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        ReceiveDate today ->
-            ( { model | startDate = Date.toIsoString today |> Just }, Cmd.none )
+    let
+        newModel =
+            case msg of
+                ReceiveDate today ->
+                    { model | startDate = Date.toIsoString today |> Just }
 
-        DateChanged value ->
-            ( { model | startDate = Just value }, Cmd.none )
+                DateChanged value ->
+                    { model | startDate = Just value }
 
-        CurrencyChanged PurchaseAmount value ->
-            ( { model | purchaseAmount = value }, Cmd.none )
+                CurrencyChanged PurchaseAmount value ->
+                    { model | purchaseAmount = value }
 
-        InstallmentsCountChanged value ->
-            ( { model | installmentsCount = String.toInt value }, Cmd.none )
+                InstallmentsCountChanged value ->
+                    { model | installmentsCount = String.toInt value }
 
-        CurrencyChanged PaidAmount value ->
-            ( { model | paidAmount = value }, Cmd.none )
+                CurrencyChanged PaidAmount value ->
+                    { model | paidAmount = value }
+    in
+    ( { newModel | paymentPlan = updatePaymentPlan newModel }, Cmd.none )
 
 
-annual_interest_rate : Maybe String -> Maybe Float -> Maybe Int -> Maybe Float -> String
-annual_interest_rate maybe_startDate maybe_purchaseAmount maybe_installmentsCount maybe_paidAmount =
-    case ( ( maybe_startDate, maybe_purchaseAmount ), ( maybe_installmentsCount, maybe_paidAmount ) ) of
-        ( ( Just startDate, Just purchaseAmount ), ( Just installmentsCount, Just paidAmount ) ) ->
+updatePaymentPlan : Model -> List Days.Installment
+updatePaymentPlan model =
+    case
+        ( ( model.purchaseAmount, model.startDate ), ( model.installmentsCount, model.paidAmount ) )
+    of
+        ( ( Just purchaseAmount, Just startDate ), ( Just installmentsCount, Just paidAmount ) ) ->
             let
-                customerFees =
-                    paidAmount - purchaseAmount
+                paymentPlanBuilder =
+                    if installmentsCount > 4 then
+                        Interest.getCreditPaymentPlan
 
-                planDurations =
-                    startDate
-                        |> Days.toPosix
-                        |> Days.timeBetweenPayments
-                        |> Days.buildPlanDays installmentsCount
+                    else
+                        Days.getPNXPaymentPlan
             in
-            Interest.annual_interest_rate purchaseAmount customerFees planDurations
+            paymentPlanBuilder
+                installmentsCount
+                startDate
+                (round <| purchaseAmount * 100)
+                (round <| (paidAmount - purchaseAmount) * 100)
 
         _ ->
+            []
+
+
+annual_interest_rate : Maybe Float -> List Days.Installment -> String
+annual_interest_rate maybe_purchaseAmount paymentPlan =
+    let
+        maybe_taeg =
+            maybe_purchaseAmount
+                |> Maybe.andThen
+                    (\purchaseAmount ->
+                        Interest.optimal_interest_rate (round <| purchaseAmount * 100) paymentPlan
+                    )
+    in
+    case maybe_taeg of
+        Just taeg ->
+            Round.round 2 (taeg * 100)
+
+        Nothing ->
             "-,--"
 
 
@@ -115,8 +144,58 @@ currencyInput field fieldInfo formName =
         ]
 
 
+viewInstallment : Int -> Days.Installment -> Html Msg
+viewInstallment i installment =
+    tr [ class "" ]
+        [ td []
+            [ text <| "E" ++ String.fromInt (i + 1) ]
+        , td []
+            [ text installment.dueDate ]
+        , td []
+            [ text <| euros installment.totalAmount ]
+        , td []
+            [ text <| euros installment.purchaseAmount ]
+        , td []
+            [ text <| euros installment.customerInterest ]
+        ]
+
+
+viewPaymentPlan : List Days.Installment -> Html Msg
+viewPaymentPlan paymentPlan =
+    case paymentPlan of
+        [] ->
+            text ""
+
+        _ ->
+            let
+                feeTitle =
+                    if List.length paymentPlan > 4 then
+                        "Intérêts"
+
+                    else
+                        "Frais client"
+            in
+            table [ class "table table-condensed" ]
+                [ thead []
+                    [ tr []
+                        [ th []
+                            [ text "#" ]
+                        , th []
+                            [ text "Date" ]
+                        , th []
+                            [ text "Montant" ]
+                        , th []
+                            [ text "Capital" ]
+                        , th []
+                            [ text feeTitle ]
+                        ]
+                    ]
+                , List.indexedMap viewInstallment paymentPlan |> tbody []
+                ]
+
+
 view : Model -> Html Msg
-view { startDate, purchaseAmount, installmentsCount, paidAmount } =
+view { startDate, purchaseAmount, installmentsCount, paidAmount, paymentPlan } =
     div []
         [ div [ class "col-sm-6" ]
             [ div [ class "form-group col-sm-6" ]
@@ -165,9 +244,12 @@ view { startDate, purchaseAmount, installmentsCount, paidAmount } =
             [ p []
                 [ h1 [ class "text-center" ]
                     [ text "Votre TAEG pour ce paiement est de "
-                    , text <| annual_interest_rate startDate purchaseAmount installmentsCount paidAmount
+                    , text <| annual_interest_rate purchaseAmount paymentPlan
                     , text "%"
                     ]
                 ]
+            ]
+        , div [ class "col-sm-6" ]
+            [ viewPaymentPlan paymentPlan
             ]
         ]
