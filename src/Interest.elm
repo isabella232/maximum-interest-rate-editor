@@ -15,13 +15,11 @@ rateWithinDays rate days =
 
 getPnxMaxBPS : Int -> Int -> List Int -> String
 getPnxMaxBPS installments_count rate planDurations =
-    -- n = len(plans) + 1
-    -- 1 / n * (n - 1 - sum([1 / (1 + r) ** (t / 365) for t in plans]))
     let
         sum =
             planDurations
                 |> Days.buildPlanDays installments_count
-                |> List.map (\t -> 1 / (1 + toFloat rate / 10000) ^ (toFloat t / 365))
+                |> List.map (\d -> 1 / (1 + toFloat rate / 10000) ^ (toFloat d / 365))
                 |> List.sum
 
         rounded_value =
@@ -92,8 +90,6 @@ show installments_count maybe_rate publicationName =
     in
     case ( maybe_rate, maybe_quarter ) of
         ( Just rate, Just quarter ) ->
-            -- n = len(plans) + 1
-            -- 1 / n * (n - 1 - sum([1 / (1 + r) ** (t / 365) for t in plans]))
             let
                 rounded_value =
                     Quarter.days quarter
@@ -114,32 +110,29 @@ optimal_interest_rate purchaseAmount paymentPlan =
         [] ->
             Nothing
 
-        firstInstallment :: xs ->
+        firstInstallment :: dueInstallments ->
             let
                 startDate =
                     firstInstallment.dueDate
                         |> Days.toPosix
-                        |> TE.add Day 3 utc
 
                 planDurations =
                     startDate
                         |> Days.timeBetweenPayments
                         |> Days.buildPlanDays (List.length paymentPlan)
-                        |> Debug.log "planDuration"
 
                 loanAmount =
-                    purchaseAmount - firstInstallment.purchaseAmount
+                    purchaseAmount - firstInstallment.totalAmount
 
                 f_sum x =
-                    List.map2 (\d installment -> toFloat installment.totalAmount * (1 / (1 + x)) ^ (toFloat d / 365)) planDurations xs
+                    List.map2 (\d installment -> toFloat installment.totalAmount * (1 / (1 + x)) ^ (toFloat d / 365)) planDurations dueInstallments
                         |> List.sum
 
                 f x =
-                    toFloat purchaseAmount - f_sum x
+                    toFloat loanAmount - f_sum x
 
                 maybe_taeg =
                     Newton.optimize f
-                        |> Debug.log "optimize"
             in
             maybe_taeg
                 |> Maybe.andThen
@@ -161,7 +154,7 @@ getCreditPaymentPlan installmentsCount startingDate purchaseAmount customerFee =
         totalAmountPhasing =
             Days.getPurchaseAmountPhasing installmentsCount (purchaseAmount + customerFee)
 
-        customerFeePhasing =
+        zeros =
             List.repeat installmentsCount 0
 
         daysBetweenPayments =
@@ -176,10 +169,9 @@ getCreditPaymentPlan installmentsCount startingDate purchaseAmount customerFee =
             List.map4 Installment
                 dates
                 totalAmountPhasing
-                totalAmountPhasing
-                customerFeePhasing
+                zeros
+                zeros
                 |> optimal_interest_rate purchaseAmount
-                |> Debug.log "maybe taeg"
     in
     case maybe_taeg of
         Nothing ->
@@ -194,10 +186,6 @@ getCreditPaymentPlan installmentsCount startingDate purchaseAmount customerFee =
                                 let
                                     monthlyRate =
                                         rateWithinDays taeg days
-                                            |> Debug.log "monthyRate"
-
-                                    _ =
-                                        Debug.log "days" days
 
                                     interest =
                                         if days == 0 then
@@ -206,11 +194,9 @@ getCreditPaymentPlan installmentsCount startingDate purchaseAmount customerFee =
                                         else
                                             (capitalLeftToPay * monthlyRate)
                                                 |> round
-                                                |> Debug.log "interest"
 
                                     amount =
-                                        (totalAmount - interest)
-                                            |> Debug.log "amount"
+                                        totalAmount - interest
                                 in
                                 ( capitalLeftToPay - toFloat amount, amount :: purchaseAcc, interest :: interestAcc )
                             )

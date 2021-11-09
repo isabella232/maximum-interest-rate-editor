@@ -50,16 +50,11 @@ buildPlanDays installments_count days =
             days
                 |> List.take (installments_count - 1)
     in
-    case durations of
-        [] ->
-            []
+    if installments_count > 4 then
+        List.map ((+) -3) durations
 
-        x :: xs ->
-            if installments_count > 4 then
-                x - 3 :: xs
-
-            else
-                durations
+    else
+        durations
 
 
 getPurchaseAmountPhasing installmentsCount purchaseAmount =

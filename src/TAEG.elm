@@ -96,8 +96,8 @@ updatePaymentPlan model =
             paymentPlanBuilder
                 installmentsCount
                 startDate
-                (round purchaseAmount * 100)
-                (round ((paidAmount - purchaseAmount) * 100))
+                (round <| purchaseAmount * 100)
+                (round <| (paidAmount - purchaseAmount) * 100)
 
         _ ->
             []
@@ -110,7 +110,7 @@ annual_interest_rate maybe_purchaseAmount paymentPlan =
             maybe_purchaseAmount
                 |> Maybe.andThen
                     (\purchaseAmount ->
-                        Interest.optimal_interest_rate (round purchaseAmount * 100) paymentPlan
+                        Interest.optimal_interest_rate (round <| purchaseAmount * 100) paymentPlan
                     )
     in
     case maybe_taeg of
