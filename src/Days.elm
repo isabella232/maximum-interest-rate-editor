@@ -1,6 +1,5 @@
 module Days exposing (Installment, buildPlanDays, getPNXPaymentPlan, getPurchaseAmountPhasing, schedulePaymentDates, timeBetweenPayments, toPosix, toString)
 
-import Date
 import Iso8601
 import Time exposing (Month(..), Posix, utc)
 import Time.Extra as TE exposing (Interval(..))
