@@ -143,11 +143,19 @@ maxPaymentPlanFromCandidates candidates =
 
 paymentPlanBuilder : Int -> Int -> String -> List Days.Installment
 paymentPlanBuilder bps installmentsCount startDate =
-    Interest.getCreditPaymentPlan
-        installmentsCount
-        startDate
-        10000
-        bps
+    if installmentsCount > 4 then
+        Interest.getCreditPaymentPlan
+            installmentsCount
+            startDate
+            10000
+            bps
+
+    else
+        Days.getPNXPaymentPlan
+            installmentsCount
+            startDate
+            10000
+            bps
 
 
 minMaxPaymentPlan : Model -> ( List Days.Installment, List Days.Installment )
