@@ -1,16 +1,13 @@
 module Bps2Taeg exposing (main)
 
 import Browser
-import Date exposing (Date)
 import Days
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Input.Float as CurrencyInput
 import Interest
 import Quarter exposing (Quarter(..))
 import Round
-import Task
 import Time exposing (Month(..))
 import Utils exposing (euros)
 
