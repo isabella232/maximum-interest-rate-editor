@@ -1,10 +1,6 @@
 module Bps2Taeg exposing (main)
 
 import Browser
-import Chart as C
-import Chart.Attributes as CA
-import Chart.Events as CE
-import Chart.Item as CI
 import Days
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -12,7 +8,6 @@ import Html.Events exposing (..)
 import Interest
 import Quarter exposing (Quarter(..))
 import Round
-import Svg as S
 import Time exposing (Month(..))
 import Utils exposing (euros)
 
