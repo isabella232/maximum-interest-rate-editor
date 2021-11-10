@@ -49,7 +49,7 @@ init _ =
             }
 
         ( minPaymentPlan, maxPaymentPlan ) =
-            getMinMaxPaymentPlan initialModel
+            minMaxPaymentPlan initialModel
     in
     ( { initialModel | minPaymentPlan = minPaymentPlan, maxPaymentPlan = maxPaymentPlan }
     , Cmd.none
@@ -68,13 +68,61 @@ update msg model =
                     { model | bps = String.toInt value }
 
         ( minPaymentPlan, maxPaymentPlan ) =
-            getMinMaxPaymentPlan newModel
+            minMaxPaymentPlan newModel
     in
     ( { newModel | minPaymentPlan = minPaymentPlan, maxPaymentPlan = maxPaymentPlan }, Cmd.none )
 
 
-getMinMaxPaymentPlan : Model -> ( List Days.Installment, List Days.Installment )
-getMinMaxPaymentPlan model =
+minPaymentPlanFromCandidates : List (List Days.Installment) -> Maybe ( List Days.Installment, Maybe Float )
+minPaymentPlanFromCandidates candidates =
+    let
+        candidatesTaeg =
+            candidates
+                |> List.map (Interest.optimal_interest_rate 10000)
+    in
+    List.map2 Tuple.pair candidates candidatesTaeg
+        |> List.foldl
+            (\( paymentPlan, maybeInterest ) acc ->
+                case ( acc, maybeInterest ) of
+                    ( Just ( previousPlan, Just previousInterest ), Just interest ) ->
+                        if previousInterest < interest then
+                            Just ( previousPlan, Just previousInterest )
+
+                        else
+                            Just ( paymentPlan, Just interest )
+
+                    _ ->
+                        Just ( paymentPlan, maybeInterest )
+            )
+            Nothing
+
+
+maxPaymentPlanFromCandidates : List (List Days.Installment) -> Maybe ( List Days.Installment, Maybe Float )
+maxPaymentPlanFromCandidates candidates =
+    let
+        candidatesTaeg =
+            candidates
+                |> List.map (Interest.optimal_interest_rate 10000)
+    in
+    List.map2 Tuple.pair candidates candidatesTaeg
+        |> List.foldl
+            (\( paymentPlan, maybeInterest ) acc ->
+                case ( acc, maybeInterest ) of
+                    ( Just ( previousPlan, Just previousInterest ), Just interest ) ->
+                        if previousInterest > interest then
+                            Just ( previousPlan, Just previousInterest )
+
+                        else
+                            Just ( paymentPlan, Just interest )
+
+                    _ ->
+                        Just ( paymentPlan, maybeInterest )
+            )
+            Nothing
+
+
+minMaxPaymentPlan : Model -> ( List Days.Installment, List Days.Installment )
+minMaxPaymentPlan model =
     case
         ( model.installmentsCount, model.bps )
     of
@@ -94,43 +142,11 @@ getMinMaxPaymentPlan model =
                         |> List.concat
                         |> List.map paymentPlanBuilder
 
-                candidatesTaeg =
-                    candidates
-                        |> List.map (Interest.optimal_interest_rate 10000)
-
                 minPaymentPlan =
-                    List.map2 Tuple.pair candidates candidatesTaeg
-                        |> List.foldl
-                            (\( paymentPlan, maybeInterest ) acc ->
-                                case ( acc, maybeInterest ) of
-                                    ( Just ( previousPlan, Just previousInterest ), Just interest ) ->
-                                        if previousInterest < interest then
-                                            Just ( previousPlan, Just previousInterest )
-
-                                        else
-                                            Just ( paymentPlan, Just interest )
-
-                                    _ ->
-                                        Just ( paymentPlan, maybeInterest )
-                            )
-                            Nothing
+                    minPaymentPlanFromCandidates candidates
 
                 maxPaymentPlan =
-                    List.map2 Tuple.pair candidates candidatesTaeg
-                        |> List.foldl
-                            (\( paymentPlan, maybeInterest ) acc ->
-                                case ( acc, maybeInterest ) of
-                                    ( Just ( previousPlan, Just previousInterest ), Just interest ) ->
-                                        if previousInterest > interest then
-                                            Just ( previousPlan, Just previousInterest )
-
-                                        else
-                                            Just ( paymentPlan, Just interest )
-
-                                    _ ->
-                                        Just ( paymentPlan, maybeInterest )
-                            )
-                            Nothing
+                    maxPaymentPlanFromCandidates candidates
             in
             case ( minPaymentPlan, maxPaymentPlan ) of
                 ( Just ( minPlan, _ ), Just ( maxPlan, _ ) ) ->
@@ -145,7 +161,7 @@ getMinMaxPaymentPlan model =
 
 viewInstallment : Int -> Days.Installment -> Html Msg
 viewInstallment i installment =
-    tr [ class "" ]
+    tr []
         [ td []
             [ text <| "E" ++ String.fromInt (i + 1) ]
         , td []
@@ -193,8 +209,8 @@ viewPaymentPlan paymentPlan =
                 ]
 
 
-annual_interest_rate : List Days.Installment -> String
-annual_interest_rate paymentPlan =
+annualInterestRate : List Days.Installment -> String
+annualInterestRate paymentPlan =
     let
         maybe_taeg =
             Interest.optimal_interest_rate 10000 paymentPlan
@@ -207,48 +223,58 @@ annual_interest_rate paymentPlan =
             "-,--"
 
 
+bpsForm : Maybe Int -> Html Msg
+bpsForm bps =
+    div [ class "form-group col-sm-6" ]
+        [ label [ for "bps", class "col-sm-6 control-label" ] [ text "Frais clients bps" ]
+        , div [ class "col-sm-6" ]
+            [ div [ class "input-group" ]
+                [ input
+                    [ type_ "text"
+                    , class "form-control"
+                    , id "bps"
+                    , value <| String.fromInt <| Maybe.withDefault 0 bps
+                    , onInput <| UserChangedBps
+                    ]
+                    []
+                , span [ class "input-group-addon" ] [ text "bps" ]
+                ]
+            ]
+        ]
+
+
+installmentsCountForm : Maybe Int -> Html Msg
+installmentsCountForm installmentsCount =
+    div [ class "form-group col-sm-6" ]
+        [ label [ for "installments_count", class "col-sm-6 control-label" ] [ text "Nombre d'échéances" ]
+        , div [ class "col-sm-6" ]
+            [ div [ class "input-group" ]
+                [ input
+                    [ type_ "text"
+                    , class "form-control"
+                    , id "installments_count"
+                    , value <| String.fromInt <| Maybe.withDefault 0 installmentsCount
+                    , onInput <| UserChangedInstallmentsCount
+                    ]
+                    []
+                , span [ class "input-group-addon" ] [ text "fois" ]
+                ]
+            ]
+        ]
+
+
 view : Model -> Html Msg
 view { bps, installmentsCount, minPaymentPlan, maxPaymentPlan } =
     div [ class "row" ]
         [ div [ class "col-sm-12" ]
-            [ div [ class "form-group col-sm-6" ]
-                [ label [ for "bps", class "col-sm-6 control-label" ] [ text "Frais clients bps" ]
-                , div [ class "col-sm-6" ]
-                    [ div [ class "input-group" ]
-                        [ input
-                            [ type_ "text"
-                            , class "form-control"
-                            , id "bps"
-                            , value <| String.fromInt <| Maybe.withDefault 0 bps
-                            , onInput <| UserChangedBps
-                            ]
-                            []
-                        , span [ class "input-group-addon" ] [ text "bps" ]
-                        ]
-                    ]
-                ]
-            , div [ class "form-group col-sm-6" ]
-                [ label [ for "installments_count", class "col-sm-6 control-label" ] [ text "Nombre d'échéances" ]
-                , div [ class "col-sm-6" ]
-                    [ div [ class "input-group" ]
-                        [ input
-                            [ type_ "text"
-                            , class "form-control"
-                            , id "installments_count"
-                            , value <| String.fromInt <| Maybe.withDefault 0 installmentsCount
-                            , onInput <| UserChangedInstallmentsCount
-                            ]
-                            []
-                        , span [ class "input-group-addon" ] [ text "fois" ]
-                        ]
-                    ]
-                ]
+            [ bpsForm bps
+            , installmentsCountForm installmentsCount
             ]
         , div [ class "col-sm-6" ]
             [ p []
                 [ h1 [ class "text-center" ]
                     [ text "Votre TAEG pour ce paiement est de "
-                    , text <| annual_interest_rate minPaymentPlan
+                    , text <| annualInterestRate minPaymentPlan
                     , text "%"
                     ]
                 ]
@@ -260,7 +286,7 @@ view { bps, installmentsCount, minPaymentPlan, maxPaymentPlan } =
             [ p []
                 [ h1 [ class "text-center" ]
                     [ text "Votre TAEG pour ce paiement est de "
-                    , text <| annual_interest_rate maxPaymentPlan
+                    , text <| annualInterestRate maxPaymentPlan
                     , text "%"
                     ]
                 ]
