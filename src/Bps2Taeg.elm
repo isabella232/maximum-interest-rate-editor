@@ -1,6 +1,10 @@
 module Bps2Taeg exposing (main)
 
 import Browser
+import Chart as C
+import Chart.Attributes as CA
+import Chart.Events as CE
+import Chart.Item as CI
 import Days
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -8,6 +12,7 @@ import Html.Events exposing (..)
 import Interest
 import Quarter exposing (Quarter(..))
 import Round
+import Svg as S
 import Time exposing (Month(..))
 import Utils exposing (euros)
 
@@ -94,6 +99,29 @@ minPaymentPlanFromCandidates candidates =
             Nothing
 
 
+allPaymentPlanCandidates : Int -> Int -> List { x : String, y : Float }
+allPaymentPlanCandidates bps installmentsCount =
+    let
+        candidatesDates =
+            [ Q1, Q2, Q3, Q4 ]
+                |> List.map Quarter.initialDates
+                |> List.concat
+
+        candidatesTaeg =
+            candidatesDates
+                |> List.map (paymentPlanBuilder bps installmentsCount)
+                |> List.map (Interest.optimal_interest_rate 10000)
+    in
+    List.map2
+        (\a b ->
+            { x = a
+            , y = Maybe.withDefault 0 b
+            }
+        )
+        candidatesDates
+        candidatesTaeg
+
+
 maxPaymentPlanFromCandidates : List (List Days.Installment) -> Maybe ( List Days.Installment, Maybe Float )
 maxPaymentPlanFromCandidates candidates =
     let
@@ -118,6 +146,15 @@ maxPaymentPlanFromCandidates candidates =
             Nothing
 
 
+paymentPlanBuilder : Int -> Int -> String -> List Days.Installment
+paymentPlanBuilder bps installmentsCount startDate =
+    Interest.getCreditPaymentPlan
+        installmentsCount
+        startDate
+        10000
+        bps
+
+
 minMaxPaymentPlan : Model -> ( List Days.Installment, List Days.Installment )
 minMaxPaymentPlan model =
     case
@@ -125,19 +162,11 @@ minMaxPaymentPlan model =
     of
         ( Just installmentsCount, Just bps ) ->
             let
-                paymentPlanBuilder =
-                    \startDate ->
-                        Interest.getCreditPaymentPlan
-                            installmentsCount
-                            startDate
-                            10000
-                            bps
-
                 candidates =
                     [ Q1, Q2, Q3, Q4 ]
                         |> List.map Quarter.initialDates
                         |> List.concat
-                        |> List.map paymentPlanBuilder
+                        |> List.map (paymentPlanBuilder bps installmentsCount)
 
                 minPaymentPlan =
                     minPaymentPlanFromCandidates candidates
@@ -223,7 +252,7 @@ annualInterestRate paymentPlan =
 bpsForm : Maybe Int -> Html Msg
 bpsForm bps =
     div [ class "form-group col-sm-6" ]
-        [ label [ for "bps", class "col-sm-6 control-label" ] [ text "Frais clients bps" ]
+        [ label [ for "bps", class "col-sm-6 control-label" ] [ text "Customer fees in bps" ]
         , div [ class "col-sm-6" ]
             [ div [ class "input-group" ]
                 [ input
@@ -243,7 +272,7 @@ bpsForm bps =
 installmentsCountForm : Maybe Int -> Html Msg
 installmentsCountForm installmentsCount =
     div [ class "form-group col-sm-6" ]
-        [ label [ for "installments_count", class "col-sm-6 control-label" ] [ text "Nombre d'échéances" ]
+        [ label [ for "installments_count", class "col-sm-6 control-label" ] [ text "Installments Count" ]
         , div [ class "col-sm-6" ]
             [ div [ class "input-group" ]
                 [ input
@@ -260,35 +289,64 @@ installmentsCountForm installmentsCount =
         ]
 
 
+displayMeanInterestRate : Maybe Int -> Maybe Int -> Html Msg
+displayMeanInterestRate maybeBps maybeInstallmentsCount =
+    case ( maybeBps, maybeInstallmentsCount ) of
+        ( Just bps, Just installmentsCount ) ->
+            let
+                data =
+                    allPaymentPlanCandidates bps installmentsCount
+
+                mean =
+                    (data |> List.map .y |> List.sum) / (List.length data |> toFloat)
+            in
+            div [ class "col-sm-12" ]
+                [ h4 [ class "alert alert-warning" ] [ text "Mean Interest Rate for this customer fee: ", strong [] [ text <| Round.round 2 (mean * 100), text " %" ] ]
+                ]
+
+        _ ->
+            text ""
+
+
 view : Model -> Html Msg
 view { bps, installmentsCount, minPaymentPlan, maxPaymentPlan } =
-    div [ class "row" ]
-        [ div [ class "col-sm-12" ]
-            [ bpsForm bps
-            , installmentsCountForm installmentsCount
-            ]
-        , div [ class "col-sm-6" ]
-            [ p []
-                [ h1 [ class "text-center" ]
-                    [ text "Votre TAEG pour ce paiement est de "
-                    , text <| annualInterestRate minPaymentPlan
-                    , text "%"
+    div []
+        [ div [ class "row" ]
+            [ div [ class "col-sm-12" ]
+                [ bpsForm bps
+                , installmentsCountForm installmentsCount
+                ]
+            , displayMeanInterestRate bps installmentsCount
+            , div [ class "col-sm-6" ]
+                [ div [ class "panel panel-default" ]
+                    [ div [ class "panel-heading" ] [ text "Minimum interest rate example" ]
+                    , viewPaymentPlan minPaymentPlan
+                    , p []
+                        [ h4 [ class "text-center" ]
+                            [ text "The interest rate for this payment is  "
+                            , strong []
+                                [ text <| annualInterestRate minPaymentPlan
+                                , text "%"
+                                ]
+                            ]
+                        ]
                     ]
                 ]
-            ]
-        , div [ class "col-sm-6" ]
-            [ viewPaymentPlan minPaymentPlan
-            ]
-        , div [ class "col-sm-6" ]
-            [ p []
-                [ h1 [ class "text-center" ]
-                    [ text "Votre TAEG pour ce paiement est de "
-                    , text <| annualInterestRate maxPaymentPlan
-                    , text "%"
+            , div [ class "col-sm-6" ]
+                [ div [ class "panel panel-default" ]
+                    [ div [ class "panel-heading" ] [ text "Maximum interest rate example" ]
+                    , viewPaymentPlan maxPaymentPlan
+                    , p
+                        []
+                        [ h4 [ class "text-center" ]
+                            [ text "The interest rate for this payment is "
+                            , strong []
+                                [ text <| annualInterestRate maxPaymentPlan
+                                , text "%"
+                                ]
+                            ]
+                        ]
                     ]
                 ]
-            ]
-        , div [ class "col-sm-6" ]
-            [ viewPaymentPlan maxPaymentPlan
             ]
         ]
