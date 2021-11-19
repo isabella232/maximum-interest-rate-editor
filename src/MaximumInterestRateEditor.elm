@@ -182,6 +182,8 @@ view model =
             , showTableFor 3 model
             , showTableFor 4 model
             , showTableFor 6 model
+            , showTableFor 8 model
             , showTableFor 10 model
+            , showTableFor 12 model
             ]
         ]
