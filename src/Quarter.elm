@@ -36,7 +36,7 @@ days quarter =
             List.map Days.toPosix days_candidates
     in
     days_candidates_posix
-        |> List.map Days.timeBetweenPayments
+        |> List.map (Days.timeBetweenPayments 12)
 
 
 fromName : String -> Maybe Quarter
