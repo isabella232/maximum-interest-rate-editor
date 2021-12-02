@@ -30,14 +30,9 @@ schedulePaymentDates installments_count starting_date =
         |> List.map (\i -> TE.add Month i utc starting_date)
 
 
-scheduleYearlyPaymentDates : Posix -> List Posix
-scheduleYearlyPaymentDates =
-    schedulePaymentDates 12
-
-
-timeBetweenPayments : Posix -> List Int
-timeBetweenPayments starting_date =
-    scheduleYearlyPaymentDates starting_date
+timeBetweenPayments : Int -> Posix -> List Int
+timeBetweenPayments installmentsCount starting_date =
+    schedulePaymentDates installmentsCount starting_date
         |> List.drop 1
         |> List.map (\end_date -> TE.diff Day utc starting_date end_date)
 

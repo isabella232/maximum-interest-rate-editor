@@ -114,10 +114,13 @@ optimal_interest_rate purchaseAmount paymentPlan =
                     firstInstallment.dueDate
                         |> Days.toPosix
 
+                installmentsCount =
+                    List.length paymentPlan
+
                 planDurations =
                     startDate
-                        |> Days.timeBetweenPayments
-                        |> Days.buildPlanDays (List.length paymentPlan)
+                        |> Days.timeBetweenPayments installmentsCount
+                        |> Days.buildPlanDays installmentsCount
 
                 loanAmount =
                     purchaseAmount - firstInstallment.totalAmount
@@ -158,7 +161,7 @@ getCreditPaymentPlan installmentsCount startingDate purchaseAmount customerFee =
         daysBetweenPayments =
             startingDate
                 |> Days.toPosix
-                |> Days.timeBetweenPayments
+                |> Days.timeBetweenPayments installmentsCount
                 |> Days.buildPlanDays installmentsCount
                 |> List.foldl (\nbDaysFromStartDate acc -> nbDaysFromStartDate - List.sum acc :: acc) []
                 |> List.reverse
