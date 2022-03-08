@@ -170,20 +170,26 @@ view model =
                 ]
             ]
         , div [ class "form-group" ]
-            [ label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Jusqu'à 3000€" ]
+            [ label [ for "below_3000", class "col-sm-2 control-label" ] [ text "Jusqu'à 3000€ d'exposition" ]
             , percentageInput Below3000 model.below3000 "below_3000" |> div [ class "col-sm-2" ]
-            , label [ for "over_3000", class "col-sm-2 control-label" ] [ text "De 3000€ à 6000€" ]
+            , label [ for "over_3000", class "col-sm-2 control-label" ] [ text "De 3000€ à 6000€ d'exposition" ]
             , percentageInput Over3000 model.over3000 "over_3000" |> div [ class "col-sm-2" ]
-            , label [ for "over_6000", class "col-sm-2 control-label" ] [ text "Au-delà 6000€" ]
+            , label [ for "over_6000", class "col-sm-2 control-label" ] [ text "Au-delà 6000€ d'exposition" ]
             , percentageInput Over6000 model.over6000 "over_6000" |> div [ class "col-sm-2" ]
             ]
         , div []
             [ showTableFor 2 model
             , showTableFor 3 model
             , showTableFor 4 model
+            , showTableFor 5 model
             , showTableFor 6 model
+            , showTableFor 7 model
             , showTableFor 8 model
+            , showTableFor 9 model
             , showTableFor 10 model
+            , showTableFor 11 model
             , showTableFor 12 model
+            , showTableFor 18 model
+            , showTableFor 24 model
             ]
         ]
