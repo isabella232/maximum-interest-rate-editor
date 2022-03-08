@@ -9,6 +9,7 @@ type Quarter
     | Q3
     | Q4
 
+maxInstallmentsHandled = 24
 
 initialDates : Quarter -> List String
 initialDates quarter =
@@ -36,7 +37,7 @@ days quarter =
             List.map Days.toPosix days_candidates
     in
     days_candidates_posix
-        |> List.map (Days.timeBetweenPayments 12)
+        |> List.map (Days.timeBetweenPayments maxInstallmentsHandled)
 
 
 fromName : String -> Maybe Quarter
